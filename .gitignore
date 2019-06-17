@@ -2,6 +2,10 @@
 **/Untitled.*
 **/.ipynb_checkpoints
 
+# Data
+data/MNIST
+data/extracted_letter_images
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
