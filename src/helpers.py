@@ -5,10 +5,10 @@ import cv2
 def resize_to_fit(image, width, height):
     """
     A helper function to resize an image to fit within a given size
-    :param image: image to resize
-    :param width: desired width in pixels
-    :param height: desired height in pixels
-    :return: the resized image
+    image: image to resize
+    width: desired width in pixels
+    height: desired height in pixels
+    return: the resized image
     """
 
     # grab the dimensions of the image, then initialize
