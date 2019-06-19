@@ -1,6 +1,13 @@
 import imutils
 import cv2
 
+def trim(image, thres):
+    """
+    A helper function to delete blank rows of image.
+    image: image to trim
+    thres: threshold to be considered blank
+    """
+    return image[np.all(image >= thres, axis=1)]
 
 def resize_to_fit(image, width, height):
     """
