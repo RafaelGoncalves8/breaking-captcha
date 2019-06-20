@@ -5,6 +5,7 @@
 # Data
 data/MNIST
 data/extracted_letter_images
+data/letters
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
