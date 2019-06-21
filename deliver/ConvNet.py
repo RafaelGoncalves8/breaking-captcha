@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Import libraries
-
 # In[1]:
 
 
@@ -36,217 +34,13 @@ os.sys.path.append('../src')
 from helpers import resize_to_fit
 
 
-# # Load dataset
-
 # In[3]:
 
 
-data_dir = os.path.abspath(os.path.relpath('../data'))
-image_dir = os.path.abspath(os.path.relpath('../doc/images'))
-
-
-# In[4]:
-
-
-CAPTCHA_IMAGES_FOLDER = "../data/samples"
-
-# initialize the data and labels
-data = []
-labels = []
-
-# loop over the input images
-for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
-    # Load the image and convert it to grayscale
-    image = cv2.imread(image_file)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-    # Grab the labels
-    label = image_file.split(os.path.sep)[-1].split('.')[-2]
-
-    # Add the image and it's label to our training data
-    data.append(image)
-    labels.append(label)
-
-
-# In[5]:
-
-
-# show sample images
-fig = plt.figure(figsize=(12, 5))
-for i in range(9):
-    plt.subplot(3,3,i+1)
-    plt.imshow(data[i], cmap='gray', interpolation='none')
-    plt.title("Ground Truth: {}".format(labels[i]))
-    plt.xticks([])
-    plt.yticks([])
-
-
-# # Pre-processing
-
-# ## Otsu threshold
-
-# In[6]:
-
-
-data_pre = []
-for e in data:
-    ret, th = cv2.threshold(e, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    kernel = np.ones((3,3), np.uint8)
-    dilation = cv2.dilate(th, kernel, iterations=1)
-    erosion = cv2.erode(dilation, kernel, iterations=1)
-
-    data_pre.append(erosion)
-
-
-# In[7]:
-
-
-# show sample images
-fig = plt.figure(figsize=(12, 5))
-for i in range(9):
-    plt.subplot(3,3,i+1)
-    plt.imshow(data_pre[i], cmap='gray', interpolation='none')
-    plt.title("Ground Truth: {}".format(labels[i]))
-    plt.xticks([])
-    plt.yticks([])
-
-
-# # K-Means
-
-# In[8]:
-
-
-#data_pre = data_pre[:100]
-
-
-# In[9]:
-
-
-data_pts = []
-for e in data_pre:
-    data_pts.append(np.where(e == 0))
-data_pts = np.array(data_pts)
-data_pts.shape
-
-
-# In[10]:
-
-
-X = []
-thres = 7
-for e in data_pts:
-    x = (np.vstack((e[1],np.flip(e[0])))).T
-    l = []
-    # Discard columns with less than thres points
-    for i in range(200):
-        if len(x[x[:,0] == i]) > thres:
-            for f in x[x[:,0] == i]:
-                l.append(f)
-    x = np.array(l)
-    X.append(x)
-X = np.array(X)
-X.shape
-
-
-# In[11]:
-
-
-# Show points
-fig = plt.figure(figsize=(15, 10))
-for i in range(9):
-    plt.subplot(3,3,i+1)
-    plt.scatter(X[i][:,0], X[i][:,1], s=100, marker='.')
-    plt.xticks([])
-    plt.yticks([])
-
-
-# In[14]:
-
-
-# Projection in x-axis
-X_proj = [x[:,0].reshape(-1,1) for x in X]
-
-
-# In[15]:
-
-
-# Find clusters in projected data
-y_kmeans_proj = []
-centers_kmeans_proj = []
-for i, x in enumerate(X_proj):
-    kmeans = KMeans(n_clusters=5)#, init=np.array([(i*200/6.0, 25) for i in range(1,6)]))
-    kmeans.fit(x)
-    centers_kmeans_proj.append(kmeans.cluster_centers_)
-    y_kmeans_proj.append(kmeans.predict(x))
-
-
-# In[43]:
-
-
-# Show clusters
-from matplotlib.patches import Rectangle
-fig = plt.figure(figsize=(15, 10))
-for i in range(9):
-    plt.subplot(3,3,i+1)
-    plt.scatter(X[i][:, 0], X[i][:, 1], c=y_kmeans_proj[i], s=100, cmap='viridis', marker='.')
-    centers = centers_kmeans_proj[i]
-    plt.scatter(centers, np.ones(centers.shape)*25, c='black', s=200, alpha=0.5, marker='o')
-    plt.xticks([])
-    plt.yticks([])
-    currentAxis = plt.gca()
-    for c in centers:
-        currentAxis.add_patch(Rectangle((c - 13, 0), 26, 50, color="red", fill=False))
-plt.show()
-
-
-# # Crop and save images
-
-# In[17]:
-
-
-centers = [np.sort(e, axis=0) for e in centers_kmeans_proj]
-
-
-# In[18]:
-
-
-centers
-
-
-# In[19]:
-
-
-data_chars = []
-for i, e in enumerate(data_pre):
-    chars = []
-    for j in range(5):
-        chars.append(e[:,int(centers[i][j]-13):int(centers[i][j]+13)])
-    data_chars.append(chars)
-
-
-# In[20]:
-
-
-letters_dir = os.path.join(data_dir, 'letters/')
 letters_dir = '../data/letters'
 
 
-# In[21]:
-
-
-if not(os.path.isdir(''.join((letters_dir)))):
-    os.mkdir(''.join((letters_dir)))
-
-for i,e in enumerate(data_chars):
-    for j in range(5):
-        if not(os.path.isdir(''.join((letters_dir,'/',labels[i][j],'/')))):
-            os.mkdir(''.join((letters_dir,'/',labels[i][j],'/')))
-        cv2.imwrite(''.join((letters_dir,'/',labels[i][j],'/',str(i),'.png')),e[j])
-
-
-# ## Convolutional Neural Network
-
-# In[22]:
+# In[4]:
 
 
 LETTER_IMAGES_FOLDER = letters_dir
@@ -275,7 +69,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[23]:
+# In[5]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
@@ -283,7 +77,7 @@ data = np.array(data, dtype="float") / 255.0
 labels = np.array(labels)
 
 
-# In[24]:
+# In[6]:
 
 
 # Split the training data into separate train and test sets
@@ -295,7 +89,7 @@ y_train = le.transform(y_train)
 y_test = le.transform(y_test)
 
 
-# In[25]:
+# In[7]:
 
 
 batch_size_train = 100
@@ -305,7 +99,7 @@ n_epochs = 10
 log_interval = 10
 
 
-# In[26]:
+# In[8]:
 
 
 X_train_t = (torch.from_numpy(X_train).float().transpose(1,3)).transpose(2,3)
@@ -315,7 +109,7 @@ train_data = torch.utils.data.TensorDataset(X_train_t, y_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[27]:
+# In[9]:
 
 
 X_test_t = (torch.from_numpy(X_test).float().transpose(1,3)).transpose(2,3)
@@ -325,14 +119,14 @@ test_data = torch.utils.data.TensorDataset(X_test_t, y_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[28]:
+# In[10]:
 
 
 examples = enumerate(test_loader)
 batch_idx, (example_data, example_targets) = next(examples)
 
 
-# In[29]:
+# In[11]:
 
 
 fig = plt.figure()
@@ -345,17 +139,17 @@ for i in range(6):
     plt.yticks([])
 
 
-# In[30]:
+# In[12]:
 
 
 class Net(nn.Module):
-    def __init__(self):
+    def __init__(self, H, D):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 32)
-        self.dropout = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(320, H)
+        self.fc2 = nn.Linear(H, 32)
+        self.dropout = nn.Dropout(D)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -364,17 +158,18 @@ class Net(nn.Module):
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
+        x = self.dropout(x)
         return F.log_softmax(x, dim=0)
 
 
-# In[31]:
+# In[13]:
 
 
-net = Net()
+net = Net(50, 0.5)
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[32]:
+# In[14]:
 
 
 train_losses = []
@@ -383,7 +178,7 @@ test_losses = []
 test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
-# In[33]:
+# In[15]:
 
 
 def train(epoch, v=True):
@@ -406,7 +201,7 @@ def train(epoch, v=True):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[34]:
+# In[16]:
 
 
 def test():
@@ -426,16 +221,17 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[35]:
+# In[17]:
 
 
+n_epochs = 30
 test()
 for epoch in range(1, n_epochs + 1):
     train(epoch)
     test()
 
 
-# In[36]:
+# In[18]:
 
 
 fig = plt.figure()
@@ -447,53 +243,10 @@ plt.ylabel('negative log likelihood loss')
 plt.show()
 
 
-# In[37]:
+# In[19]:
 
 
-with torch.no_grad():
-    output = net(example_data)
-    print(output.data)
-
-
-# In[38]:
-
-
-fig = plt.figure()
-for i in range(6):
-    plt.subplot(2,3,i+1)
-    plt.tight_layout()
-    plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
-    plt.title("Prediction: {}".format(le.inverse_transform(output.data.max(1, keepdim=True)[1][i])[0]))
-    plt.xticks([])
-    plt.yticks([])
-
-
-# In[39]:
-
-
-class Net(nn.Module):
-    def __init__(self, H, D):
-        super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 32)
-        self.dropout = nn.Dropout(0.5)
-
-    def forward(self, x):
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = self.dropout(x)
-        x = self.fc2(x)
-        return F.log_softmax(x, dim=0)
-
-
-# In[41]:
-
-
-n_epochs = 10
+n_epochs = 100
 
 for H in [50, 120, 320]:
     for D in [0, 0.3, 0.5, 0.7]:
@@ -505,7 +258,7 @@ for H in [50, 120, 320]:
         test_losses = []
         test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
         
-        print("\nNet with H = {}, D = {}".format(H, D))
+        print("Net with H = {}, D = {}".format(H, D))
         
         test()
         for epoch in range(1, n_epochs + 1):
@@ -520,21 +273,6 @@ for H in [50, 120, 320]:
         plt.ylabel('negative log likelihood loss')
         plt.title('Learning curve for H = {}, D = {}'.format(H, D))
         plt.show()   
-
-
-# http://ceur-ws.org/Vol-1885/93.pdf
-# https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/34843.pdf
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
 
 
 # In[ ]:
