@@ -18,6 +18,8 @@ def resize_to_fit(image, width, height):
     return: the resized image
     """
 
+    WHITE = [int(image[0,0]),int(image[0,0]),int(image[0,0])]
+
     # grab the dimensions of the image, then initialize
     # the padding values
     (h, w) = image.shape[:2]
@@ -40,7 +42,7 @@ def resize_to_fit(image, width, height):
     # pad the image then apply one more resizing to handle any
     # rounding issues
     image = cv2.copyMakeBorder(image, padH, padH, padW, padW,
-        cv2.BORDER_REPLICATE)
+        cv2.BORDER_CONSTANT,value=WHITE)
     image = cv2.resize(image, (width, height))
 
     # return the pre-processed image
