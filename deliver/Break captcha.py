@@ -160,14 +160,14 @@ for i in range(9):
     plt.yticks([])
 
 
-# In[14]:
+# In[12]:
 
 
 # Projection in x-axis
 X_proj = [x[:,0].reshape(-1,1) for x in X]
 
 
-# In[15]:
+# In[13]:
 
 
 # Find clusters in projected data
@@ -180,7 +180,7 @@ for i, x in enumerate(X_proj):
     y_kmeans_proj.append(kmeans.predict(x))
 
 
-# In[43]:
+# In[14]:
 
 
 # Show clusters
@@ -201,19 +201,19 @@ plt.show()
 
 # # Crop and save images
 
-# In[17]:
+# In[15]:
 
 
 centers = [np.sort(e, axis=0) for e in centers_kmeans_proj]
 
 
-# In[18]:
+# In[16]:
 
 
 centers
 
 
-# In[19]:
+# In[17]:
 
 
 data_chars = []
@@ -224,14 +224,14 @@ for i, e in enumerate(data_pre):
     data_chars.append(chars)
 
 
-# In[20]:
+# In[18]:
 
 
 letters_dir = os.path.join(data_dir, 'letters/')
 letters_dir = '../data/letters'
 
 
-# In[21]:
+# In[19]:
 
 
 if not(os.path.isdir(''.join((letters_dir)))):
@@ -246,7 +246,7 @@ for i,e in enumerate(data_chars):
 
 # ## Convolutional Neural Network
 
-# In[22]:
+# In[20]:
 
 
 LETTER_IMAGES_FOLDER = letters_dir
@@ -275,7 +275,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[23]:
+# In[21]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
@@ -283,7 +283,7 @@ data = np.array(data, dtype="float") / 255.0
 labels = np.array(labels)
 
 
-# In[24]:
+# In[22]:
 
 
 # Split the training data into separate train and test sets
@@ -295,17 +295,17 @@ y_train = le.transform(y_train)
 y_test = le.transform(y_test)
 
 
-# In[25]:
+# In[23]:
 
 
 batch_size_train = 100
 batch_size_test = 1000
 learning_rate = 0.01
-n_epochs = 10
+n_epochs = 15
 log_interval = 10
 
 
-# In[26]:
+# In[24]:
 
 
 X_train_t = (torch.from_numpy(X_train).float().transpose(1,3)).transpose(2,3)
@@ -315,7 +315,7 @@ train_data = torch.utils.data.TensorDataset(X_train_t, y_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[27]:
+# In[25]:
 
 
 X_test_t = (torch.from_numpy(X_test).float().transpose(1,3)).transpose(2,3)
@@ -325,19 +325,19 @@ test_data = torch.utils.data.TensorDataset(X_test_t, y_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[28]:
+# In[26]:
 
 
 examples = enumerate(test_loader)
 batch_idx, (example_data, example_targets) = next(examples)
 
 
-# In[29]:
+# In[27]:
 
 
 fig = plt.figure()
-for i in range(6):
-    plt.subplot(2,3,i+1)
+for i in range(9):
+    plt.subplot(3,3,i+1)
     plt.tight_layout()
     plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
     plt.title("Ground Truth: {}".format(le.inverse_transform(example_targets)[i]))
@@ -345,7 +345,7 @@ for i in range(6):
     plt.yticks([])
 
 
-# In[30]:
+# In[28]:
 
 
 class Net(nn.Module):
@@ -353,9 +353,9 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 32)
-        self.dropout = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(320, 120)
+        self.fc2 = nn.Linear(120, 32)
+        self.dropout = nn.Dropout(0.3)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
@@ -364,17 +364,18 @@ class Net(nn.Module):
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
+        x = self.dropout(x)
         return F.log_softmax(x, dim=0)
 
 
-# In[31]:
+# In[29]:
 
 
 net = Net()
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[32]:
+# In[30]:
 
 
 train_losses = []
@@ -383,7 +384,7 @@ test_losses = []
 test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
-# In[33]:
+# In[31]:
 
 
 def train(epoch, v=True):
@@ -406,7 +407,7 @@ def train(epoch, v=True):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[34]:
+# In[32]:
 
 
 def test():
@@ -426,7 +427,7 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[35]:
+# In[33]:
 
 
 test()
@@ -435,7 +436,7 @@ for epoch in range(1, n_epochs + 1):
     test()
 
 
-# In[36]:
+# In[34]:
 
 
 fig = plt.figure()
@@ -447,98 +448,26 @@ plt.ylabel('negative log likelihood loss')
 plt.show()
 
 
-# In[37]:
+# In[35]:
 
 
 with torch.no_grad():
     output = net(example_data)
-    print(output.data)
 
 
-# In[38]:
+# In[68]:
 
 
 fig = plt.figure()
-for i in range(6):
-    plt.subplot(2,3,i+1)
+for i in range(9):
+    plt.subplot(3,3,i+1)
     plt.tight_layout()
     plt.imshow(example_data[i][0], cmap='gray', interpolation='none')
-    plt.title("Prediction: {}".format(le.inverse_transform(output.data.max(1, keepdim=True)[1][i])[0]))
+    plt.title("Prediction: {}/{}".format(le.inverse_transform(output.data.max(1, keepdim=True)[1][i])[0],
+                                         le.inverse_transform(example_targets[i].view(-1, 1)[0])[0]))
     plt.xticks([])
     plt.yticks([])
 
 
-# In[39]:
-
-
-class Net(nn.Module):
-    def __init__(self, H, D):
-        super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, 50)
-        self.fc2 = nn.Linear(50, 32)
-        self.dropout = nn.Dropout(0.5)
-
-    def forward(self, x):
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = self.dropout(x)
-        x = self.fc2(x)
-        return F.log_softmax(x, dim=0)
-
-
-# In[41]:
-
-
-n_epochs = 10
-
-for H in [50, 120, 320]:
-    for D in [0, 0.3, 0.5, 0.7]:
-        net = Net(H, D)
-        optimizer = optim.Adam(net.parameters(), lr=learning_rate)
-        
-        train_losses = []
-        train_counter = []
-        test_losses = []
-        test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
-        
-        print("\nNet with H = {}, D = {}".format(H, D))
-        
-        test()
-        for epoch in range(1, n_epochs + 1):
-            train(epoch, False)
-            test()
-            
-        fig = plt.figure()
-        plt.plot(train_counter, train_losses, color='blue')
-        plt.scatter(test_counter, test_losses, color='red')
-        plt.legend(['Train Loss', 'Test Loss'], loc='upper right')
-        plt.xlabel('number of training examples seen')
-        plt.ylabel('negative log likelihood loss')
-        plt.title('Learning curve for H = {}, D = {}'.format(H, D))
-        plt.show()   
-
-
 # http://ceur-ws.org/Vol-1885/93.pdf
 # https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/34843.pdf
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
