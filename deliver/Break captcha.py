@@ -247,7 +247,7 @@ data_chars = []
 for i, e in enumerate(data_pre):
     chars = []
     for j in range(5):
-        chars.append(e[:,int(centers[i][j]-10):int(centers[i][j]+10)])
+        chars.append(e[:,int(centers[i][j]-13):int(centers[i][j]+13)])
     data_chars.append(chars)
 
 
@@ -325,10 +325,10 @@ y_test = le.transform(y_test)
 # In[25]:
 
 
-batch_size_train = X_train.shape[0]/1000
+batch_size_train = 100
 batch_size_test = 1000
 learning_rate = 0.01
-n_epochs = 5
+n_epochs = 10
 log_interval = 10
 
 
@@ -517,10 +517,10 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=0)
 
 
-# In[40]:
+# In[41]:
 
 
-n_epochs = 5
+n_epochs = 10
 
 for H in [50, 120, 320]:
     for D in [0, 0.3, 0.5, 0.7]:
