@@ -133,7 +133,7 @@ data_pts.shape
 
 
 X = []
-thres = 7
+thres = 3
 for e in data_pts:
     x = (np.vstack((e[1],np.flip(e[0])))).T
     l = []
@@ -205,12 +205,6 @@ plt.show()
 
 
 centers = [np.sort(e, axis=0) for e in centers_kmeans_proj]
-
-
-# In[16]:
-
-
-centers
 
 
 # In[17]:
@@ -467,6 +461,12 @@ for i in range(9):
                                          le.inverse_transform(example_targets[i].view(-1, 1)[0])[0]))
     plt.xticks([])
     plt.yticks([])
+
+
+# In[ ]:
+
+
+
 
 
 # http://ceur-ws.org/Vol-1885/93.pdf
