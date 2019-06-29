@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[24]:
+# In[1]:
 
 
 import os
@@ -30,14 +30,14 @@ os.sys.path.append('../src')
 from helpers import resize_to_fit
 
 
-# In[25]:
+# In[2]:
 
 
 data_dir = os.path.abspath(os.path.relpath('../data'))
 image_dir = os.path.abspath(os.path.relpath('../doc/images'))
 
 
-# In[26]:
+# In[3]:
 
 
 CAPTCHA_IMAGES_FOLDER = "../data/samples"
@@ -49,6 +49,7 @@ labels = []
 # loop over the input images
 for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     # Load the image and convert it to grayscale
+
     image = cv2.imread(image_file)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
@@ -60,13 +61,13 @@ for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[27]:
+# In[4]:
 
 
 (X_train, X_test, y_train, y_test) = train_test_split(data, labels, test_size=0.25, random_state=0)
 
 
-# In[28]:
+# In[5]:
 
 
 def create_images(data, label):
@@ -122,7 +123,7 @@ def create_images(data, label):
     return data_chars
 
 
-# In[30]:
+# In[6]:
 
 
 letters_train_dir = '../data/letters/train'
@@ -136,10 +137,10 @@ for i,e in enumerate(data_chars):
     for j in range(5):
         if not(os.path.isdir(''.join((letters_train_dir,'/',y_train[i],'/')))):
             os.mkdir(''.join((letters_train_dir,'/',y_train[i],'/')))
-        cv2.imwrite(''.join((letters_train_dir,'/',y_train[i],'/',y_train[i][j],'.png')),e[j])
+        cv2.imwrite(''.join((letters_train_dir,'/',y_train[i],'/',str(j),'-',y_train[i][j],'.png')),e[j])
 
 
-# In[31]:
+# In[7]:
 
 
 letters_test_dir = '../data/letters/test'
@@ -153,10 +154,10 @@ for i,e in enumerate(data_chars_test):
     for j in range(5):
         if not(os.path.isdir(''.join((letters_test_dir,'/',y_test[i],'/')))):
             os.mkdir(''.join((letters_test_dir,'/',y_test[i],'/')))
-        cv2.imwrite(''.join((letters_test_dir,'/',y_test[i],'/',y_test[i][j],'.png')),e[j])
+        cv2.imwrite(''.join((letters_test_dir,'/',y_test[i],'/',str(j),'-',y_test[i][j],'.png')),e[j])
 
 
-# In[32]:
+# In[8]:
 
 
 LETTER_IMAGES_FOLDER = letters_train_dir
@@ -178,24 +179,24 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     image = np.expand_dims(image, axis=2)
 
     # Grab the name of the letter based on the folder it was in
-    label = image_file.split(os.path.sep)[-2].split('.')[-2]
+    label = image_file.split(os.path.sep)[-1].split('.')[-2].split('-')[1]
 
     # Add the letter image and it's label to our training data
     data_l_train.append(image)
     labels_l_train.append(label)
 
 
-# In[33]:
+# In[39]:
 
 
 LETTER_IMAGES_FOLDER = letters_test_dir
 
 # initialize the data and labels
-data_l_train = []
-labels_l_train = []
+data_l_test = []
+labels_l_test = []
 
 # loop over the input images
-for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
+for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER)):
     # Load the image and convert it to grayscale
     image = cv2.imread(image_file)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -207,67 +208,64 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     image = np.expand_dims(image, axis=2)
 
     # Grab the name of the letter based on the folder it was in
-    label = image_file.split(os.path.sep)[-1].split('.')[-2]
+    label = image_file.split(os.path.sep)[-1].split('.')[-2].split('-')[1]
 
     # Add the letter image and it's label to our training data
-    data_l_train.append(image)
-    labels_l_train.append(label)
+    data_l_test.append(image)
+    labels_l_test.append(label)
 
 
-# In[36]:
+# In[40]:
+
+
+np.shape(data_l_test)
+
+
+# In[41]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
 X_l_train = np.array(data_l_train, dtype="float") / 255.0
-y_l_test = np.array(data_l_test, dtype="float") / 255.0
+X_l_test = np.array(data_l_test, dtype="float") / 255.0
 
 
-# In[22]:
+# In[42]:
 
 
 # Convert the labels (letters) into one-hot encodings that Keras can work with
-le = LabelEncoder().fit(np.array(labels_l_train))
-y_train = le.transform(np.array(y_train)
-y_test = le.transform(y_test)
+le = LabelEncoder().fit(np.array((labels_l_train + labels_l_test)))
+y_l_train = le.transform(np.array(labels_l_train))
+y_l_test = le.transform(np.array(labels_l_test))
 
 
-# In[23]:
+# In[43]:
 
 
 batch_size_train = 100
 batch_size_test = 1000
-learning_rate = 0.01
-n_epochs = 15
-log_interval = 10
 
 
-# In[24]:
+# In[44]:
 
 
-X_train_t = (torch.from_numpy(X_train).float().transpose(1,3)).transpose(2,3)
-y_train_t = torch.from_numpy(y_train).long()
+X_l_train_t = (torch.from_numpy(X_l_train).float().transpose(1,3)).transpose(2,3)
+y_l_train_t = torch.from_numpy(y_l_train).long()
 
-train_data = torch.utils.data.TensorDataset(X_train_t, y_train_t)
+train_data = torch.utils.data.TensorDataset(X_l_train_t, y_l_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[25]:
+# In[45]:
 
 
-X_test_t = (torch.from_numpy(X_test).float().transpose(1,3)).transpose(2,3)
-y_test_t = torch.from_numpy(y_test).long()
+X_l_test_t = (torch.from_numpy(X_l_test).float().transpose(1,3)).transpose(2,3)
+y_l_test_t = torch.from_numpy(y_l_test).long()
 
-test_data = torch.utils.data.TensorDataset(X_test_t, y_test_t)
+test_data = torch.utils.data.TensorDataset(X_l_test_t, y_l_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[ ]:
-
-
-
-
-
-# In[ ]:
+# In[46]:
 
 
 class Net(nn.Module):
@@ -290,10 +288,10 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=0)
 
 
-# In[ ]:
+# In[47]:
 
 
-def train(epoch, v=True):
+def train(epoch, v=False):
     net.train()
     for batch_idx, (data, target) in enumerate(train_loader):
         optimizer.zero_grad()
@@ -313,7 +311,7 @@ def train(epoch, v=True):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[ ]:
+# In[48]:
 
 
 def test():
@@ -333,102 +331,104 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[ ]:
+# In[49]:
 
 
-def model(data, labels, learning_rate=0.01, n_epochs=5, ):
-    create_images(data, labels)
-    
-    
-    
-    net = Net()
-    optimizer = optim.Adam(net.parameters(), lr=learning_rate)
-    
-    for epoch in range(1, n_epochs + 1):
-        train(epoch)
+learning_rate = 0.01
+log_interval = 10
+n_epochs = 10
 
 
-# In[1]:
+# In[50]:
 
 
-LETTER_IMAGES_FOLDER = '../data/letters'
+net = Net()
+optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[20]:
+# In[51]:
+
+
+train_losses = []
+train_counter = []
+test_losses = []
+test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
+
+
+# In[52]:
+
+
+test()
+for epoch in range(1, n_epochs + 1):
+    train(epoch)
+    test()
+
+
+# In[53]:
+
+
+LETTER_IMAGES_FOLDER = '../data/letters/test'
 
 
 # initialize the data and labels
-data = []
-labels = []
+data_test = []
+labels_test = []
 
 # loop over the input images
-for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
-    # Load the image and convert it to grayscale
-    image = cv2.imread(image_file)
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+for d in os.listdir(LETTER_IMAGES_FOLDER):
+    aux = []
+    for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER + '/' + d)):
+        # Load the image and convert it to grayscale
+        image = cv2.imread(image_file)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Resize the letter so it fits in a 28x28 pixel box
-    image = resize_to_fit(image, 28, 28)
+        # Resize the letter so it fits in a 28x28 pixel box
+        image = resize_to_fit(image, 28, 28)
 
-    # Add a third channel dimension to the image to make Keras happy
-    image = np.expand_dims(image, axis=2)
-
-    # Grab the name of the letter based on the folder it was in
-    label = image_file.split(os.path.sep)[-2]
-
-    # Add the letter image and it's label to our training data
-    data.append(image)
-    labels.append(label)
+        # Add a third channel dimension to the image to make Keras happy
+        image = np.expand_dims(image, axis=2)
+        aux.append(image)
+        
 
 
-# In[21]:
+    data_test.append(aux)
+    labels_test.append(d)
 
 
-# scale the raw pixel intensities to the range [0, 1] (this improves training)
-data = np.array(data, dtype="float") / 255.0
-labels = np.array(labels)
+# In[54]:
 
 
-# In[22]:
+np.shape(data_test[2])
 
 
-# Split the training data into separate train and test sets
-(X_train, X_test, y_train, y_test) = train_test_split(data, labels, test_size=0.25, random_state=0)
-
-# Convert the labels (letters) into one-hot encodings that Keras can work with
-le = LabelEncoder().fit(y_train)
-y_train = le.transform(y_train)
-y_test = le.transform(y_test)
+# In[55]:
 
 
-# In[23]:
+pred_test = []
+
+for i, e in enumerate(labels_test):
+    x = np.array(data_test[i], dtype="float") / 255.0
+    x = (torch.from_numpy(x).float().transpose(1,3)).transpose(2,3)
+    out = net(x)
+    pred = out.data.max(1, keepdim=True)[1]
+    y = (''.join([e for e in le.inverse_transform(np.ravel(pred))]))
+    pred_test.append(y)
 
 
-batch_size_train = 100
-batch_size_test = 1000
-learning_rate = 0.01
-n_epochs = 15
-log_interval = 10
+# In[56]:
 
 
-# In[24]:
+correct = 0
+for e, f in zip(pred_test, labels_test):
+    if e == f:
+        correct += 1
+correct
 
 
-X_train_t = (torch.from_numpy(X_train).float().transpose(1,3)).transpose(2,3)
-y_train_t = torch.from_numpy(y_train).long()
-
-train_data = torch.utils.data.TensorDataset(X_train_t, y_train_t)
-train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
+# In[57]:
 
 
-# In[25]:
-
-
-X_test_t = (torch.from_numpy(X_test).float().transpose(1,3)).transpose(2,3)
-y_test_t = torch.from_numpy(y_test).long()
-
-test_data = torch.utils.data.TensorDataset(X_test_t, y_test_t)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
+correct/len(pred_test)
 
 
 # In[ ]:
