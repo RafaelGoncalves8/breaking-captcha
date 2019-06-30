@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[56]:
+# In[1]:
 
 
 import os
@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[57]:
+# In[2]:
 
 
 os.sys.path.append('../src')
@@ -36,14 +36,14 @@ from helpers import resize_to_fit
 
 # # Load dataset
 
-# In[58]:
+# In[3]:
 
 
 data_dir = os.path.abspath(os.path.relpath('../data'))
 image_dir = os.path.abspath(os.path.relpath('../doc/images'))
 
 
-# In[59]:
+# In[4]:
 
 
 CAPTCHA_IMAGES_FOLDER = "../data/samples"
@@ -66,7 +66,7 @@ for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[60]:
+# In[5]:
 
 
 data_pre = []
@@ -79,7 +79,7 @@ for e in data:
     data_pre.append(erosion)
 
 
-# In[61]:
+# In[6]:
 
 
 data_pts = []
@@ -89,7 +89,7 @@ data_pts = np.array(data_pts)
 data_pts.shape
 
 
-# In[62]:
+# In[7]:
 
 
 X = []
@@ -108,7 +108,7 @@ X = np.array(X)
 X.shape
 
 
-# In[63]:
+# In[8]:
 
 
 # Show points
@@ -120,14 +120,14 @@ for i in range(9):
     plt.yticks([])
 
 
-# In[64]:
+# In[9]:
 
 
 # Projection in x-axis
 X_proj = [x[:,0].reshape(-1,1) for x in X]
 
 
-# In[65]:
+# In[10]:
 
 
 # Find clusters in projected data
@@ -140,7 +140,7 @@ for i, x in enumerate(X_proj):
     y_kmeans_proj.append(kmeans.predict(x))
 
 
-# In[66]:
+# In[11]:
 
 
 # Show clusters
@@ -161,20 +161,20 @@ plt.show()
 
 # # Crop and save images
 
-# In[67]:
+# In[12]:
 
 
 centers = [np.sort(e, axis=0) for e in centers_kmeans_proj]
 
 
-# In[68]:
+# In[13]:
 
 
-size_crops = [i for i in range(5,23,2)]
+size_crops = [10, 12, 14, 16, 18, 19, 20, 21, 22]
 size_crops
 
 
-# In[69]:
+# In[14]:
 
 
 for sze_crp in size_crops:
@@ -201,7 +201,7 @@ for sze_crp in size_crops:
 
 # ## Convolutional Neural Network
 
-# In[70]:
+# In[15]:
 
 
 for sze_crp in size_crops:
@@ -247,7 +247,7 @@ for sze_crp in size_crops:
     batch_size_train = 100
     batch_size_test = 1000
     learning_rate = 0.01
-    n_epochs = 15
+    n_epochs = 10
     log_interval = 10
 
     X_train_t = (torch.from_numpy(X_train).float().transpose(1,3)).transpose(2,3)
@@ -272,7 +272,7 @@ for sze_crp in size_crops:
             self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
             self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
             self.fc1 = nn.Linear(320, 120)
-            self.fc2 = nn.Linear(120, 32)
+            self.fc2 = nn.Linear(120, 19)
             self.dropout = nn.Dropout(0.3)
 
         def forward(self, x):

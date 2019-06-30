@@ -186,7 +186,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     labels_l_train.append(label)
 
 
-# In[39]:
+# In[9]:
 
 
 LETTER_IMAGES_FOLDER = letters_test_dir
@@ -215,13 +215,13 @@ for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER)):
     labels_l_test.append(label)
 
 
-# In[40]:
+# In[10]:
 
 
 np.shape(data_l_test)
 
 
-# In[41]:
+# In[11]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
@@ -229,7 +229,7 @@ X_l_train = np.array(data_l_train, dtype="float") / 255.0
 X_l_test = np.array(data_l_test, dtype="float") / 255.0
 
 
-# In[42]:
+# In[12]:
 
 
 # Convert the labels (letters) into one-hot encodings that Keras can work with
@@ -238,14 +238,14 @@ y_l_train = le.transform(np.array(labels_l_train))
 y_l_test = le.transform(np.array(labels_l_test))
 
 
-# In[43]:
+# In[13]:
 
 
 batch_size_train = 100
 batch_size_test = 1000
 
 
-# In[44]:
+# In[14]:
 
 
 X_l_train_t = (torch.from_numpy(X_l_train).float().transpose(1,3)).transpose(2,3)
@@ -255,7 +255,7 @@ train_data = torch.utils.data.TensorDataset(X_l_train_t, y_l_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[45]:
+# In[15]:
 
 
 X_l_test_t = (torch.from_numpy(X_l_test).float().transpose(1,3)).transpose(2,3)
@@ -265,7 +265,7 @@ test_data = torch.utils.data.TensorDataset(X_l_test_t, y_l_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[46]:
+# In[28]:
 
 
 class Net(nn.Module):
@@ -274,7 +274,7 @@ class Net(nn.Module):
         self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
         self.fc1 = nn.Linear(320, 120)
-        self.fc2 = nn.Linear(120, 32)
+        self.fc2 = nn.Linear(120, 19)
         self.dropout = nn.Dropout(0.3)
 
     def forward(self, x):
@@ -288,7 +288,7 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=0)
 
 
-# In[47]:
+# In[29]:
 
 
 def train(epoch, v=False):
@@ -311,7 +311,7 @@ def train(epoch, v=False):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[48]:
+# In[30]:
 
 
 def test():
@@ -331,22 +331,22 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[49]:
+# In[32]:
 
 
 learning_rate = 0.01
 log_interval = 10
-n_epochs = 10
+n_epochs = 100
 
 
-# In[50]:
+# In[33]:
 
 
 net = Net()
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[51]:
+# In[34]:
 
 
 train_losses = []
@@ -355,7 +355,7 @@ test_losses = []
 test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
-# In[52]:
+# In[35]:
 
 
 test()
@@ -364,7 +364,7 @@ for epoch in range(1, n_epochs + 1):
     test()
 
 
-# In[53]:
+# In[36]:
 
 
 LETTER_IMAGES_FOLDER = '../data/letters/test'
@@ -395,13 +395,13 @@ for d in os.listdir(LETTER_IMAGES_FOLDER):
     labels_test.append(d)
 
 
-# In[54]:
+# In[37]:
 
 
 np.shape(data_test[2])
 
 
-# In[55]:
+# In[38]:
 
 
 pred_test = []
@@ -415,24 +415,19 @@ for i, e in enumerate(labels_test):
     pred_test.append(y)
 
 
-# In[56]:
+# In[39]:
 
 
 correct = 0
 for e, f in zip(pred_test, labels_test):
+    print(e, f)
     if e == f:
         correct += 1
 correct
 
 
-# In[57]:
+# In[40]:
 
 
 correct/len(pred_test)
-
-
-# In[ ]:
-
-
-
 

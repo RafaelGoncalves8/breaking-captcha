@@ -6,6 +6,7 @@
 data/MNIST
 data/extracted_letter_images
 data/letters
+data/letters_tst_size
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
