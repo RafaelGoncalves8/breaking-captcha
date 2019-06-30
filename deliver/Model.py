@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[23]:
+# In[1]:
 
 
 import os
@@ -30,14 +30,14 @@ os.sys.path.append('../src')
 from helpers import resize_to_fit
 
 
-# In[24]:
+# In[2]:
 
 
 data_dir = os.path.abspath(os.path.relpath('../data'))
 image_dir = os.path.abspath(os.path.relpath('../doc/images'))
 
 
-# In[25]:
+# In[3]:
 
 
 CAPTCHA_IMAGES_FOLDER = "../data/samples"
@@ -61,13 +61,13 @@ for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[26]:
+# In[4]:
 
 
 (X_train, X_test, y_train, y_test) = train_test_split(data, labels, test_size=0.25, random_state=0)
 
 
-# In[27]:
+# In[5]:
 
 
 def create_images(data, label):
@@ -123,7 +123,7 @@ def create_images(data, label):
     return data_chars
 
 
-# In[28]:
+# In[6]:
 
 
 letters_train_dir = '../data/letters/train'
@@ -140,7 +140,7 @@ for i,e in enumerate(data_chars):
         cv2.imwrite(''.join((letters_train_dir,'/',y_train[i],'/',str(j),'-',y_train[i][j],'.png')),e[j])
 
 
-# In[29]:
+# In[7]:
 
 
 letters_test_dir = '../data/letters/test'
@@ -157,7 +157,7 @@ for i,e in enumerate(data_chars_test):
         cv2.imwrite(''.join((letters_test_dir,'/',y_test[i],'/',str(j),'-',y_test[i][j],'.png')),e[j])
 
 
-# In[45]:
+# In[8]:
 
 
 LETTER_IMAGES_FOLDER = letters_train_dir
@@ -186,7 +186,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     labels_l_train.append(label)
 
 
-# In[46]:
+# In[9]:
 
 
 LETTER_IMAGES_FOLDER = letters_test_dir
@@ -215,13 +215,13 @@ for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER)):
     labels_l_test.append(label)
 
 
-# In[47]:
+# In[10]:
 
 
 np.shape(data_l_test)
 
 
-# In[48]:
+# In[11]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
@@ -229,7 +229,7 @@ X_l_train = np.array(data_l_train, dtype="float") / 255.0
 X_l_test = np.array(data_l_test, dtype="float") / 255.0
 
 
-# In[49]:
+# In[12]:
 
 
 # Convert the labels (letters) into one-hot encodings that Keras can work with
@@ -238,14 +238,14 @@ y_l_train = le.transform(np.array(labels_l_train))
 y_l_test = le.transform(np.array(labels_l_test))
 
 
-# In[50]:
+# In[13]:
 
 
 batch_size_train = 100
 batch_size_test = 1000
 
 
-# In[51]:
+# In[14]:
 
 
 X_l_train_t = (torch.from_numpy(X_l_train).float().transpose(1,3)).transpose(2,3)
@@ -255,7 +255,7 @@ train_data = torch.utils.data.TensorDataset(X_l_train_t, y_l_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[52]:
+# In[15]:
 
 
 X_l_test_t = (torch.from_numpy(X_l_test).float().transpose(1,3)).transpose(2,3)
@@ -265,7 +265,7 @@ test_data = torch.utils.data.TensorDataset(X_l_test_t, y_l_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[53]:
+# In[16]:
 
 
 class Net(nn.Module):
@@ -288,7 +288,7 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=0)
 
 
-# In[54]:
+# In[17]:
 
 
 def train(epoch, v=False):
@@ -311,7 +311,7 @@ def train(epoch, v=False):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[55]:
+# In[18]:
 
 
 def test():
@@ -331,7 +331,7 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[56]:
+# In[19]:
 
 
 learning_rate = 0.01
@@ -339,14 +339,14 @@ log_interval = 10
 n_epochs = 100
 
 
-# In[57]:
+# In[20]:
 
 
 net = Net()
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[58]:
+# In[21]:
 
 
 train_losses = []
@@ -355,7 +355,7 @@ test_losses = []
 test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
-# In[59]:
+# In[22]:
 
 
 test()
@@ -364,7 +364,7 @@ for epoch in range(1, n_epochs + 1):
     test()
 
 
-# In[62]:
+# In[23]:
 
 
 LETTER_IMAGES_FOLDER = '../data/letters/test'
@@ -395,13 +395,13 @@ for d in os.listdir(LETTER_IMAGES_FOLDER):
     labels_test.append(d)
 
 
-# In[63]:
+# In[24]:
 
 
 np.shape(data_test[2])
 
 
-# In[64]:
+# In[25]:
 
 
 pred_test = []
@@ -415,7 +415,7 @@ for i, e in enumerate(labels_test):
     pred_test.append(y)
 
 
-# In[65]:
+# In[26]:
 
 
 correct = 0
@@ -426,10 +426,33 @@ for e, f in zip(pred_test, labels_test):
 correct
 
 
-# In[66]:
+# In[27]:
 
 
 correct/len(pred_test)
+
+
+# In[32]:
+
+
+def confusion(y_hat, y, n_classes):
+    ans = np.zeros((n_classes, n_classes))
+    for i, (e, f) in enumerate(zip(y, y_hat)):
+        ans[classes.index(e)][int(f)] += 1
+    return ans
+
+
+# In[33]:
+
+
+classes = list(le.classes_)
+
+
+# In[34]:
+
+
+print(classes)
+cm = confusion(pred_test, labels_test, len(classes))
 
 
 # In[ ]:

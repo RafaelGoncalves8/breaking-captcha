@@ -3,7 +3,7 @@
 
 # # Import libraries
 
-# In[2]:
+# In[1]:
 
 
 import os
@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[3]:
+# In[2]:
 
 
 os.sys.path.append('../src')
@@ -38,14 +38,14 @@ from helpers import resize_to_fit
 
 # # Load dataset
 
-# In[4]:
+# In[3]:
 
 
 data_dir = os.path.abspath(os.path.relpath('../data'))
 image_dir = os.path.abspath(os.path.relpath('../doc/images'))
 
 
-# In[5]:
+# In[4]:
 
 
 CAPTCHA_IMAGES_FOLDER = "../data/samples"
@@ -68,7 +68,7 @@ for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[6]:
+# In[5]:
 
 
 # show sample images
@@ -85,7 +85,7 @@ for i in range(9):
 
 # ## Otsu threshold
 
-# In[7]:
+# In[6]:
 
 
 data_pre = []
@@ -98,7 +98,7 @@ for e in data:
     data_pre.append(erosion)
 
 
-# In[8]:
+# In[7]:
 
 
 # show sample images
@@ -113,13 +113,13 @@ for i in range(9):
 
 # # K-Means
 
-# In[9]:
+# In[8]:
 
 
 #data_pre = data_pre[:100]
 
 
-# In[10]:
+# In[9]:
 
 
 data_pts = []
@@ -129,7 +129,7 @@ data_pts = np.array(data_pts)
 data_pts.shape
 
 
-# In[11]:
+# In[10]:
 
 
 X = []
@@ -148,7 +148,7 @@ X = np.array(X)
 X.shape
 
 
-# In[12]:
+# In[11]:
 
 
 # Show points
@@ -160,7 +160,7 @@ for i in range(9):
     plt.yticks([])
 
 
-# In[15]:
+# In[12]:
 
 
 y_kmeans = []
@@ -172,7 +172,7 @@ for i, x in enumerate(X):
     y_kmeans.append(kmeans.predict(x))
 
 
-# In[25]:
+# In[13]:
 
 
 # Show clusters
@@ -191,14 +191,14 @@ for i in range(9):
 plt.show()
 
 
-# In[12]:
+# In[14]:
 
 
 # Projection in x-axis
 X_proj = [x[:,0].reshape(-1,1) for x in X]
 
 
-# In[13]:
+# In[15]:
 
 
 # Find clusters in projected data
@@ -211,7 +211,7 @@ for i, x in enumerate(X_proj):
     y_kmeans_proj.append(kmeans.predict(x))
 
 
-# In[14]:
+# In[16]:
 
 
 # Show clusters
@@ -232,31 +232,31 @@ plt.show()
 
 # # Crop and save images
 
-# In[15]:
+# In[17]:
 
 
 centers = [np.sort(e, axis=0) for e in centers_kmeans_proj]
 
 
-# In[17]:
+# In[18]:
 
 
 data_chars = []
 for i, e in enumerate(data_pre):
     chars = []
     for j in range(5):
-        chars.append(e[:,int(centers[i][j]-13):int(centers[i][j]+13)])
+        chars.append(e[:,int(centers[i][j]-21):int(centers[i][j]+21)])
     data_chars.append(chars)
 
 
-# In[18]:
+# In[19]:
 
 
 letters_dir = os.path.join(data_dir, 'letters/')
 letters_dir = '../data/letters'
 
 
-# In[19]:
+# In[20]:
 
 
 if not(os.path.isdir(''.join((letters_dir)))):
@@ -271,7 +271,7 @@ for i,e in enumerate(data_chars):
 
 # ## Convolutional Neural Network
 
-# In[20]:
+# In[53]:
 
 
 LETTER_IMAGES_FOLDER = letters_dir
@@ -287,7 +287,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Resize the letter so it fits in a 28x28 pixel box
-    image = resize_to_fit(image, 28, 28)
+    image = resize_to_fit(image, 32, 32)
 
     # Add a third channel dimension to the image to make Keras happy
     image = np.expand_dims(image, axis=2)
@@ -300,7 +300,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[21]:
+# In[54]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
@@ -308,19 +308,19 @@ data = np.array(data, dtype="float") / 255.0
 labels = np.array(labels)
 
 
-# In[22]:
+# In[73]:
 
 
 # Split the training data into separate train and test sets
 (X_train, X_test, y_train, y_test) = train_test_split(data, labels, test_size=0.25, random_state=0)
 
 # Convert the labels (letters) into one-hot encodings that Keras can work with
-le = LabelEncoder().fit(y_train)
+le = LabelEncoder().fit(np.stack(list(y_train) + list(y_test)))
 y_train = le.transform(y_train)
 y_test = le.transform(y_test)
 
 
-# In[23]:
+# In[74]:
 
 
 batch_size_train = 100
@@ -330,7 +330,7 @@ n_epochs = 15
 log_interval = 10
 
 
-# In[24]:
+# In[75]:
 
 
 X_train_t = (torch.from_numpy(X_train).float().transpose(1,3)).transpose(2,3)
@@ -340,7 +340,7 @@ train_data = torch.utils.data.TensorDataset(X_train_t, y_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[25]:
+# In[76]:
 
 
 X_test_t = (torch.from_numpy(X_test).float().transpose(1,3)).transpose(2,3)
@@ -350,14 +350,14 @@ test_data = torch.utils.data.TensorDataset(X_test_t, y_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[26]:
+# In[77]:
 
 
 examples = enumerate(test_loader)
 batch_idx, (example_data, example_targets) = next(examples)
 
 
-# In[27]:
+# In[78]:
 
 
 fig = plt.figure()
@@ -370,22 +370,22 @@ for i in range(9):
     plt.yticks([])
 
 
-# In[28]:
+# In[79]:
 
 
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, 120)
-        self.fc2 = nn.Linear(120, 32)
+        self.conv1 = nn.Conv2d(1, 6, kernel_size=5)
+        self.conv2 = nn.Conv2d(6, 16, kernel_size=5)
+        self.fc1 = nn.Linear(400, 340)
+        self.fc2 = nn.Linear(340, 19)
         self.dropout = nn.Dropout(0.3)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, 320)
+        x = x.view(-1, 400)
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
@@ -393,14 +393,14 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=0)
 
 
-# In[29]:
+# In[80]:
 
 
 net = Net()
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[30]:
+# In[81]:
 
 
 train_losses = []
@@ -409,7 +409,7 @@ test_losses = []
 test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
-# In[31]:
+# In[82]:
 
 
 def train(epoch, v=True):
@@ -432,7 +432,7 @@ def train(epoch, v=True):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[32]:
+# In[83]:
 
 
 def test():
@@ -452,7 +452,7 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[33]:
+# In[84]:
 
 
 test()
@@ -461,7 +461,7 @@ for epoch in range(1, n_epochs + 1):
     test()
 
 
-# In[34]:
+# In[85]:
 
 
 fig = plt.figure()
@@ -473,14 +473,14 @@ plt.ylabel('negative log likelihood loss')
 plt.show()
 
 
-# In[35]:
+# In[ ]:
 
 
 with torch.no_grad():
     output = net(example_data)
 
 
-# In[68]:
+# In[ ]:
 
 
 fig = plt.figure()

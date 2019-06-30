@@ -11,13 +11,14 @@ Fournierp.
 \newblock Opencv word segmenting on captcha images.
 \newblock
   \url{https://www.kaggle.com/fournierp/opencv-word-segmenting-on-captcha-images}.
-\newblock (acessado em 30/06/2019).
+\newblock (acessado em 01/06/2019).
 
-\bibitem{K99}
-Steven~L. Kleiman.
-\newblock Writing a math phase two paper.
-\newblock \url{http://www.mit.edu/course/other/mathp2/www/piil.html}, 1999.
-\newblock (acessado em 08/11/2007).
+\bibitem{15min}
+Adam Geitgey.
+\newblock How to break a captch system in 15 minutes with machine learning.
+\newblock
+  \url{https://medium.com/@ageitgey/how-to-break-a-captcha-system-in-15-minutes-with-machine-learning-dbebb035a710}.
+\newblock (acessado em 01/06/2019).
 
 \bibitem{kopp2017}
 Martin Kopp, Matej Nikl, and Martin Holena.

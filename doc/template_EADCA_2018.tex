@@ -84,10 +84,14 @@ Nossa abordagem consistiu em aplicar um filtro que melhor convertesse a imagem e
 Foram testados 3 filtros diferentes para a primeira etapa (\em adaptative threshold\em , filtro Otsu e filtro Otsu com ruído aleatório adicionado) e diferentes valores de iterações para os filtros de \em erosion \em e \em dilatation\em . Os filtros escolhidos, a saber filtro Otsu com 1 iteração de cada uma das distorções apresentadas, foram os que melhor removeram o ruído, selecionados por inspeção visual em uma amostra aleatória das imagens.
 
 
-\subsection{Clusterização}
+\subsection{Segmentação da Imagem em Caracteres}
 \label{sec:cluteri}
 
-A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O dataset utilizado, tinha a especificação de apenas de 5 caracteres por imagem. Assim, o número de 5 clusters foi determinado previamente. Por existir caracteres sobrepostos, a clusterização não identificava as fronteiras entre os caracteres de maneira tão eficiente. Além disso, o algoritmo, recorrentemente, identificava clusters na vertical, o que não é adequado já que os caracteres são dispostos na horizontal (Figura ~\ref{fig:kmeans2d}). A solução encontrada foi projetar os dados no plano horizontal e em seguida aplicar o k-means. Com isso, a informação utilizada de fato foi a posição horizontal dos centroides. Para cortar as imagens os centros foram posicionados no meio do eixo vertical (Figura ~\ref{fig:kmeans1d}).
+Para separar os caracteres presentes na imagem processada, foi utilizado um algoritimo de clusterização e posteriormente expandiu-se um retângulo ao redor dos centroides dos clusters para determinar a região da imagem a ser salva como um caractere.
+
+A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O dataset utilizado, tinha a especificação de apenas de 5 caracteres por imagem. Assim, o número de 5 clusters foi determinado previamente. Por existir caracteres sobrepostos, a clusterização não identificava as fronteiras entre os caracteres de maneira tão eficiente. Além disso, o algoritmo, recorrentemente, identificava clusters na vertical, o que não é adequado já que os caracteres são dispostos na horizontal (Figura ~\ref{fig:kmeans2d}). 
+
+A solução encontrada foi projetar os dados no plano horizontal e em seguida aplicar o k-means apenas em 1 dimensão. Com isso, a informação utilizada de fato foi a posição horizontal dos centroides. Para cortar as imagens os centros foram posicionados no meio do eixo vertical (Figura ~\ref{fig:kmeans1d}).
 
   \begin{figure}[H]
         {\centering
@@ -105,10 +109,10 @@ A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O
 
 Com as posições do centro, foi necessário determinar os tamanhos para realizar o corte na imagem. Através de tamanhos pré-estabelecidos, foi determinado o tamanho de 21 pixels a direita e a esquerda do centro gerado pelo k-means. Essas imagens foram utilizadas na entrada da rede neural. 
 
-\subsection{Rede Neural Convolucional}
+\subsection{Reconhecimento de Caracteres}
 \label{ssec:convnet}
 
-A rede neural foi inspirada em \cite{kopp2017}. A rede consiste em:
+A etapa de reconhecimento de caracteres consistiu em uma rede neural convolucional inspirada em \cite{kopp2017}. A rede possui a seguinte arquitetura:
 
 \begin{enumerate}
 \item
@@ -119,6 +123,8 @@ A rede neural foi inspirada em \cite{kopp2017}. A rede consiste em:
     A camada de saída com 19 neurônios e ativação softmax
 \end{enumerate}
 
+O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{ex}).
+
   \begin{figure}[H]
         {\centering
         \includegraphics[width=70mm]{images/nn.png}
@@ -126,16 +132,7 @@ A rede neural foi inspirada em \cite{kopp2017}. A rede consiste em:
         \label{fig:nn}\par}
   \end{figure}
 
-O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{ex}).
-
-  \begin{figure}[H]
-        {\centering
-        \includegraphics[width=70mm]{images/learning.png}
-        \caption{Curva de aprendizado.}
-        \label{fig:learning}\par}
-  \end{figure}
-
-\begin{table}[]
+\begin{table}[H]
     {\centering
 \begin{tabular}{@{}lll@{}}
 \toprule
@@ -155,74 +152,29 @@ H   & Dropout & Avg Accuracy \\ \midrule
     \par}
 \end{table}
 
-\subsection{Tabelas}
-\label{ssec:tabelas}
-
-A formata\c{c}\~{a}o das tabelas segue a mesma recomenda\c{c}\~{a}o das figuras.
-A Tabela~\ref{tab:ex} ilustra o uso de uma tabela. Esta tabela sintetiza
-o tempo, em meses, que cada grupo $G_i$ necessitou para realizar a
-tarefa $T_j$.
-
-\begin{table}[H]
-  {\centering
-  \begin{tabular}{|c|c|c|c|c|}
-  \hline
-   & $G_1$ & $G_2$ & $G_2$ & $G_3$ \\
-  \hline
-  $T_1$ & 2 & 4 & 6 & 8 \\
-  \hline
-  $T_2$ & 3 & 6 & 9 & 12 \\
-  \hline
-  \end{tabular}
-\caption{Exemplo de uma tabela.}
-\label{tab:ex}
-\par}
-\end{table}
-
-\subsection{Equa\c{c}\~{o}es}
-\label{ssec:equacoes}
-
-Na maioria dos textos t\'{e}cnicos, equa\c{c}\~{o}es s\~{a}o fundamentais. Elas podem ser \'{u}teis para expressar de forma
-concisa o modelo de um problema. Lembre-se, no entanto, de que elas s\'{o} podem ser devidamente compreendidas
-pelos seus leitores se voc\^{e} explicar o significado de cada letra que aparece nelas. Procure ainda uniformizar
-as nota\c{c}\~{o}es para reduzir o esfor\c{c}o mental requerido para guardar o significado de todas as letras que
-aparecem ao longo do seu artigo. Algumas dicas do emprego de equa\c{c}\~{o}es e nota\c{c}\~{o}es matem\'{a}ticas num texto
-t\'{e}cnico s\~{a}o dadas em~\cite{K99}.
-
-Como as figuras, as equa\c{c}\~{o}es devem ser complementares a seu texto, ou
-seja, elas devem ser citadas, centradas e numeradas com uma numera\c{c}\~{a}o
-\'{u}nica. Para exemplificar, mostramos na Eq.~\ref{eq:lagrange} uma
-express\~{a}o que descreve a din\^{a}mica de um ponto no espa\c{c}o.
-  \begin{equation}
-  \label{eq:lagrange}
-  f(x,t) = m \frac{d^2x}{dt^2},
-  \end{equation}
-onde $f(x,t)$ \'{e} a for\c{c}a aplicada no ponto $x$ no instante $t$ e $m$
-corresponde \`{a} massa concentrada em $x$.
-
-\subsection{Cita\c{c}\~{o}es e Refer\^{e}ncias Bibliogr\'{a}ficas}
-
-As cita\c{c}\~{o}es devem ser por refer\^{e}ncia num\'{e}rica e as refer\^{e}ncias devem
-ser completas e uniformes, organizadas pela ordem alfab\'{e}tica do
-sobrenome.
-
 \section{Resultados}
 
-Deve-se evitar afirma\c{c}\~{o}es vagas, como ``\'{e} melhor'', ``\'{e} mais r\'{a}pido''
-ou ``\'{e} mais eficiente''. Os leitores podem, por si mesmos, concluir isso,
-se voc\^{e} apresentar tabelas ou gr\'{a}ficos sintetizando os seus resultados
-quantitativos e os de outras propostas com objetivos similares aos
-seus.
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/learning.png}
+        \caption{Curva de aprendizado.}
+        \label{fig:learning}\par}
+  \end{figure}
 
-Quando n\~{a}o for poss\'{\i}vel apresentar os resultados de forma
-quantitativa, utilize imagens de boa qualidade para facilitar an\'{a}lises
-qualitativas.
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/pred.png}
+        \caption{Classes encontradas pela rede convolucional para alguns dados de entrada.}
+        \label{fig:learning}\par}
+  \end{figure}
+
 
 \section{Conclus\~{o}es}
 
 Foi possível desenvolver um sistema que identifica imagens de CAPTCHA com uma acurácia total de 0,2761 para os dados contidos no dataset \cite{data}. Para trabalhos posteriores, podem ser testados outros modelos de clusterização para que este englobe CAPTCHA’s com diferentes números de caracteres. Na parte de classificação podem ser utilizadas redes com maior número de camadas bem como outros bancos de dados com mais imagens para melhorar seu desempenho. Outra melhoria que pode ser feita é o uso de outras métricas que levem em conta um banco de dados com classes desbalanceadas.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\nocite{15min} 
   \bibliographystyle{plain}
 
    \bibliography{bib-template}
