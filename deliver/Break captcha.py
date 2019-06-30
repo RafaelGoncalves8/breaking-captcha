@@ -3,7 +3,7 @@
 
 # # Import libraries
 
-# In[1]:
+# In[2]:
 
 
 import os
@@ -29,7 +29,7 @@ import matplotlib.pyplot as plt
 get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[2]:
+# In[3]:
 
 
 os.sys.path.append('../src')
@@ -38,14 +38,14 @@ from helpers import resize_to_fit
 
 # # Load dataset
 
-# In[3]:
+# In[4]:
 
 
 data_dir = os.path.abspath(os.path.relpath('../data'))
 image_dir = os.path.abspath(os.path.relpath('../doc/images'))
 
 
-# In[4]:
+# In[5]:
 
 
 CAPTCHA_IMAGES_FOLDER = "../data/samples"
@@ -68,7 +68,7 @@ for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[5]:
+# In[6]:
 
 
 # show sample images
@@ -85,7 +85,7 @@ for i in range(9):
 
 # ## Otsu threshold
 
-# In[6]:
+# In[7]:
 
 
 data_pre = []
@@ -98,7 +98,7 @@ for e in data:
     data_pre.append(erosion)
 
 
-# In[7]:
+# In[8]:
 
 
 # show sample images
@@ -113,13 +113,13 @@ for i in range(9):
 
 # # K-Means
 
-# In[8]:
+# In[9]:
 
 
 #data_pre = data_pre[:100]
 
 
-# In[9]:
+# In[10]:
 
 
 data_pts = []
@@ -129,7 +129,7 @@ data_pts = np.array(data_pts)
 data_pts.shape
 
 
-# In[10]:
+# In[11]:
 
 
 X = []
@@ -148,7 +148,7 @@ X = np.array(X)
 X.shape
 
 
-# In[11]:
+# In[12]:
 
 
 # Show points
@@ -158,6 +158,37 @@ for i in range(9):
     plt.scatter(X[i][:,0], X[i][:,1], s=100, marker='.')
     plt.xticks([])
     plt.yticks([])
+
+
+# In[15]:
+
+
+y_kmeans = []
+centers_kmeans = []
+for i, x in enumerate(X):
+    kmeans = KMeans(n_clusters=5)#, init=np.array([(i*200/6.0, 25) for i in range(1,6)]))
+    kmeans.fit(x)
+    centers_kmeans.append(kmeans.cluster_centers_)
+    y_kmeans.append(kmeans.predict(x))
+
+
+# In[25]:
+
+
+# Show clusters
+from matplotlib.patches import Rectangle
+fig = plt.figure(figsize=(15, 10))
+for i in range(9):
+    plt.subplot(3,3,i+1)
+    plt.scatter(X[i][:, 0], X[i][:, 1], c=y_kmeans[i], s=100, cmap='viridis', marker='.')
+    centers = centers_kmeans[i]
+    plt.scatter(centers[:,0], centers[:,1], c='black', s=200, alpha=0.5, marker='o')
+    plt.xticks([])
+    plt.yticks([])
+    currentAxis = plt.gca()
+#     for c in centers:
+#         currentAxis.add_patch(Rectangle((c - 13, 0), 26, 50, color="red", fill=False))
+plt.show()
 
 
 # In[12]:

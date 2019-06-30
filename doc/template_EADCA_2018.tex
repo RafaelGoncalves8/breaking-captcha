@@ -1,0 +1,230 @@
+\documentclass[11pt]{article}
+\usepackage{eadca-template}
+\usepackage[plain]{algorithm}
+
+\usepackage[brazil,english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{graphicx,url}
+\usepackage[hang]{subfigure}
+\usepackage{psfrag}
+\usepackage{booktabs}
+
+\sloppy
+
+
+\title{Classificação de CAPTCHA's}
+
+\author{Thomás Portugal \and Rafael Gonçalves}
+
+\address{Departamento de Engenharia de Computa\c{c}\~{a}o e Automa\c{c}\~{a}o Industrial (DCA) \\
+  Faculdade de Engenharia El\'{e}trica e de Computa\c{c}\~{a}o (FEEC) \\
+  Universidade Estadual de Campinas (Unicamp)\\
+  CEP 13083-852 -- Campinas, SP, Brasil
+%   \email{\{autores,NomeOrientador\}@dca.fee.unicamp.br}}
+
+\hyphenation{}
+\pagestyle{fancy}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\twocolumn[
+\maketitle
+\thispagestyle{fancy}
+\selectlanguage{english}
+
+   \begin{abstract}
+       This project study the possibility of using k-means and convolutional neural networks for solving text-based reverse Turing test mechanism, called CAPTCHA. Such mechanism is often used in network security for preventing attacks such as password guessing using bruteforce or dictionary or denial of service attacks.
+       Our approuch was to create a pipeline of pre-processing, segmentation and optical character recognition. For the first part we tested 3 methods for denoising, then used k-means clusterization algorithm for segmentation and finally trained a convolutional neural network to classify each individual character. The output was the concatenation of the output of the network for each input character of the CAPTCHA.
+   \end{abstract}
+
+  \keywords{CAPTCHA,  k-means, otsu threashold, convolutional  neural  networks, network security, optical character recognition.}
+]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\selectlanguage{brazil}
+
+  \section{Introdu\c{c}\~{a}o}
+  \label{sec:introducao}
+
+CAPTCHA (\em Completely Automated Public Turing test to tell Computers and Humans Apart\em ) é um mecanismo utilizado em serviços digitais para garantir que softwares automatizados não peçam acesso em excesso ou de maneira torpe, preservando a integridade e a confiabilidade de tais serviços. Normalmente um CAPTCHA é uma imagem gerada por um computador, com caracteres distorcidos. A intenção é que seja uma tarefa relativamente fácil para uma pessoa executar, mas razoavelmente complicada, do ponto de vista computacional.
+
+Como o CAPTCHA vem sendo extensamente usado como a primeira linha de defesa contra ataques DDoS (\em Distributed Denial of Services\em ) e afins, saber o quanto essa ferramenta é segura no contexto atual é de suma importância.
+Este trabalho visa desenvolver um sistema, baseado em redes neurais convolucionais e em um algoritmo de clusterização, para a identificação dos caracteres apresentados em imagens de CAPTCHA coletadas do banco de dados do site Kaggle \cite{data}.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \section{Proposta}
+  \label{sec:detalhes}
+
+  O problema principal foi dividido em dois subproblemas: um de segmentação de imagem utilizando uma algoritmo de aprendizado não supervisionado (clusterização) e outro de classificação de imagens. Estes foram baseados em \cite{kopp2017}.
+
+Antes da segmentação da imagem, houve um trabalho de pré-processamento dos dados baseado em \cite{proc}. Foram aplicados filtros para diminuir o nível de ruído da imagem, facilitando o trabalho de segmentação. 
+
+A parte de clusterização envolveu determinar em que regiões da imagem estavam os caracteres. Em imagens geradas por CAPTCHA, frequentemente, há sobreposição de letras e números, além de ruídos e manchas que não representam caracter nenhum. Estas artimanhas são utilizadas justamente para dificultar a ação de algoritmos sobre as imagens. Com o uso de clusterização, os caracteres foram identificados e a imagem foi cortadas para o uso posterior na etapa de classificação. 
+
+Na etapa de classificação, os fragmentos selecionados na etapa anterior, são separados em treino e teste, e inseridos na entrada de uma rede neural. Essa rede neural foi treinada para identificar os dígitos individualmente. Após ser aplicada nas amostras de teste, os caracteres foram identificados e a previsão da imagem juntou as saídas individuais de cada amostra e identificou os caracteres gerados pelo CAPTCHA originalmente.
+
+
+
+\subsection{Pré Processamento}
+\label{sec:preprocessing}
+
+Antes de tudo foram aplicadas técnicas de processamento de imagem para remover possíveis distorções e ruídos e facilitar a segmentação não supervisionada da imagem.
+
+Nossa abordagem consistiu em aplicar um filtro que melhor convertesse a imagem em preto e branco a fim de remover as influências do degradê em cinza no fundo da imagem e posterior aplicação de filtros de \em erosion \em e \em dilatation \em visando remover linhas artificialmente adicionadas por cima dos caracteres (Figura ~\ref{fig:preproc}).
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/preproc.png}
+        \caption{Etapas usadas para preprocessamento.}
+        \label{fig:preproc}\par}
+  \end{figure}
+
+Foram testados 3 filtros diferentes para a primeira etapa (\em adaptative threshold\em , filtro Otsu e filtro Otsu com ruído aleatório adicionado) e diferentes valores de iterações para os filtros de \em erosion \em e \em dilatation\em . Os filtros escolhidos, a saber filtro Otsu com 1 iteração de cada uma das distorções apresentadas, foram os que melhor removeram o ruído, selecionados por inspeção visual em uma amostra aleatória das imagens.
+
+
+\subsection{Clusterização}
+\label{sec:cluteri}
+
+A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O dataset utilizado, tinha a especificação de apenas de 5 caracteres por imagem. Assim, o número de 5 clusters foi determinado previamente. Por existir caracteres sobrepostos, a clusterização não identificava as fronteiras entre os caracteres de maneira tão eficiente. Além disso, o algoritmo, recorrentemente, identificava clusters na vertical, o que não é adequado já que os caracteres são dispostos na horizontal (Figura ~\ref{fig:kmeans2d}). A solução encontrada foi projetar os dados no plano horizontal e em seguida aplicar o k-means. Com isso, a informação utilizada de fato foi a posição horizontal dos centroides. Para cortar as imagens os centros foram posicionados no meio do eixo vertical (Figura ~\ref{fig:kmeans1d}).
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/2dkmeans.png}
+        \caption{Clusters encontrados pelo kmeans nas 2 dimensões das imagens.}
+        \label{fig:kmeans2d}\par}
+  \end{figure}
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/1dkmeans.png}
+        \caption{Clusters encontrados pelo kmeans no eixo horizontal. Retangulo ao redor de cada caractere encontrado pelo kmeans.}
+        \label{fig:kmeans1d}\par}
+  \end{figure}
+
+Com as posições do centro, foi necessário determinar os tamanhos para realizar o corte na imagem. Através de tamanhos pré-estabelecidos, foi determinado o tamanho de 21 pixels a direita e a esquerda do centro gerado pelo k-means. Essas imagens foram utilizadas na entrada da rede neural. 
+
+\subsection{Rede Neural Convolucional}
+\label{ssec:convnet}
+
+A rede neural foi inspirada em \cite{kopp2017}. A rede consiste em:
+
+\begin{enumerate}
+\item
+    Duas camadas convolucionais com kernel de lado 5, função de ativação linear retificada e max-polling de 2. A primeira com 6 kernels e a segunda com 16 kernels.
+\item
+    Duas camadas intermediárias \em fully connected \em com respectivamente 400 e 340 neurônios ReLU e dropout de 30\%
+\item
+    A camada de saída com 19 neurônios e ativação softmax
+\end{enumerate}
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/nn.png}
+        \caption{Arquitetura da rede.}
+        \label{fig:nn}\par}
+  \end{figure}
+
+O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{ex}).
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/learning.png}
+        \caption{Curva de aprendizado.}
+        \label{fig:learning}\par}
+  \end{figure}
+
+\begin{table}[]
+    {\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+H   & Dropout & Avg Accuracy \\ \midrule
+50  & 0       & 0.8719       \\
+50  & 0.3     & 0.9197       \\
+50  & 0.5     & 0.9008       \\
+120 & 0       & 0.8996       \\
+120 & 0.3     & 0.9444       \\
+120 & 0.5     & 0.9499       \\
+340 & 0       & 0.9048       \\
+340 & 0.3     & 0.9541       \\
+340 & 0.5     & 0.9382       \\ \bottomrule
+\end{tabular}
+\caption{Comparação entre modelos testados. H é o número de neurônios na última camada intermediária da rede.}
+\label{tab:ex}
+    \par}
+\end{table}
+
+\subsection{Tabelas}
+\label{ssec:tabelas}
+
+A formata\c{c}\~{a}o das tabelas segue a mesma recomenda\c{c}\~{a}o das figuras.
+A Tabela~\ref{tab:ex} ilustra o uso de uma tabela. Esta tabela sintetiza
+o tempo, em meses, que cada grupo $G_i$ necessitou para realizar a
+tarefa $T_j$.
+
+\begin{table}[H]
+  {\centering
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+   & $G_1$ & $G_2$ & $G_2$ & $G_3$ \\
+  \hline
+  $T_1$ & 2 & 4 & 6 & 8 \\
+  \hline
+  $T_2$ & 3 & 6 & 9 & 12 \\
+  \hline
+  \end{tabular}
+\caption{Exemplo de uma tabela.}
+\label{tab:ex}
+\par}
+\end{table}
+
+\subsection{Equa\c{c}\~{o}es}
+\label{ssec:equacoes}
+
+Na maioria dos textos t\'{e}cnicos, equa\c{c}\~{o}es s\~{a}o fundamentais. Elas podem ser \'{u}teis para expressar de forma
+concisa o modelo de um problema. Lembre-se, no entanto, de que elas s\'{o} podem ser devidamente compreendidas
+pelos seus leitores se voc\^{e} explicar o significado de cada letra que aparece nelas. Procure ainda uniformizar
+as nota\c{c}\~{o}es para reduzir o esfor\c{c}o mental requerido para guardar o significado de todas as letras que
+aparecem ao longo do seu artigo. Algumas dicas do emprego de equa\c{c}\~{o}es e nota\c{c}\~{o}es matem\'{a}ticas num texto
+t\'{e}cnico s\~{a}o dadas em~\cite{K99}.
+
+Como as figuras, as equa\c{c}\~{o}es devem ser complementares a seu texto, ou
+seja, elas devem ser citadas, centradas e numeradas com uma numera\c{c}\~{a}o
+\'{u}nica. Para exemplificar, mostramos na Eq.~\ref{eq:lagrange} uma
+express\~{a}o que descreve a din\^{a}mica de um ponto no espa\c{c}o.
+  \begin{equation}
+  \label{eq:lagrange}
+  f(x,t) = m \frac{d^2x}{dt^2},
+  \end{equation}
+onde $f(x,t)$ \'{e} a for\c{c}a aplicada no ponto $x$ no instante $t$ e $m$
+corresponde \`{a} massa concentrada em $x$.
+
+\subsection{Cita\c{c}\~{o}es e Refer\^{e}ncias Bibliogr\'{a}ficas}
+
+As cita\c{c}\~{o}es devem ser por refer\^{e}ncia num\'{e}rica e as refer\^{e}ncias devem
+ser completas e uniformes, organizadas pela ordem alfab\'{e}tica do
+sobrenome.
+
+\section{Resultados}
+
+Deve-se evitar afirma\c{c}\~{o}es vagas, como ``\'{e} melhor'', ``\'{e} mais r\'{a}pido''
+ou ``\'{e} mais eficiente''. Os leitores podem, por si mesmos, concluir isso,
+se voc\^{e} apresentar tabelas ou gr\'{a}ficos sintetizando os seus resultados
+quantitativos e os de outras propostas com objetivos similares aos
+seus.
+
+Quando n\~{a}o for poss\'{\i}vel apresentar os resultados de forma
+quantitativa, utilize imagens de boa qualidade para facilitar an\'{a}lises
+qualitativas.
+
+\section{Conclus\~{o}es}
+
+Foi possível desenvolver um sistema que identifica imagens de CAPTCHA com uma acurácia total de 0,2761 para os dados contidos no dataset \cite{data}. Para trabalhos posteriores, podem ser testados outros modelos de clusterização para que este englobe CAPTCHA’s com diferentes números de caracteres. Na parte de classificação podem ser utilizadas redes com maior número de camadas bem como outros bancos de dados com mais imagens para melhorar seu desempenho. Outra melhoria que pode ser feita é o uso de outras métricas que levem em conta um banco de dados com classes desbalanceadas.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  \bibliographystyle{plain}
+
+   \bibliography{bib-template}
+
+\end{document}

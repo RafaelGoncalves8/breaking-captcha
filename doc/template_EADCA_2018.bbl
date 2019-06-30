@@ -1,0 +1,27 @@
+\begin{thebibliography}{1}
+
+\bibitem{data}
+Fournierp.
+\newblock Captcha version 2 images.
+\newblock \url{https://www.kaggle.com/fournierp/captcha-version-2-images,}.
+\newblock (acessado em 01/06/2019).
+
+\bibitem{proc}
+Fournierp.
+\newblock Opencv word segmenting on captcha images.
+\newblock
+  \url{https://www.kaggle.com/fournierp/opencv-word-segmenting-on-captcha-images}.
+\newblock (acessado em 30/06/2019).
+
+\bibitem{K99}
+Steven~L. Kleiman.
+\newblock Writing a math phase two paper.
+\newblock \url{http://www.mit.edu/course/other/mathp2/www/piil.html}, 1999.
+\newblock (acessado em 08/11/2007).
+
+\bibitem{kopp2017}
+Martin Kopp, Matej Nikl, and Martin Holena.
+\newblock Breaking captchas with convolutional neural networks.
+\newblock {\em ITAT 2017 Proceedings}, pages 93--99, 2017.
+
+\end{thebibliography}

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[23]:
 
 
 import os
@@ -30,14 +30,14 @@ os.sys.path.append('../src')
 from helpers import resize_to_fit
 
 
-# In[2]:
+# In[24]:
 
 
 data_dir = os.path.abspath(os.path.relpath('../data'))
 image_dir = os.path.abspath(os.path.relpath('../doc/images'))
 
 
-# In[3]:
+# In[25]:
 
 
 CAPTCHA_IMAGES_FOLDER = "../data/samples"
@@ -61,13 +61,13 @@ for image_file in paths.list_images(CAPTCHA_IMAGES_FOLDER):
     labels.append(label)
 
 
-# In[4]:
+# In[26]:
 
 
 (X_train, X_test, y_train, y_test) = train_test_split(data, labels, test_size=0.25, random_state=0)
 
 
-# In[5]:
+# In[27]:
 
 
 def create_images(data, label):
@@ -123,7 +123,7 @@ def create_images(data, label):
     return data_chars
 
 
-# In[6]:
+# In[28]:
 
 
 letters_train_dir = '../data/letters/train'
@@ -140,7 +140,7 @@ for i,e in enumerate(data_chars):
         cv2.imwrite(''.join((letters_train_dir,'/',y_train[i],'/',str(j),'-',y_train[i][j],'.png')),e[j])
 
 
-# In[7]:
+# In[29]:
 
 
 letters_test_dir = '../data/letters/test'
@@ -157,7 +157,7 @@ for i,e in enumerate(data_chars_test):
         cv2.imwrite(''.join((letters_test_dir,'/',y_test[i],'/',str(j),'-',y_test[i][j],'.png')),e[j])
 
 
-# In[8]:
+# In[45]:
 
 
 LETTER_IMAGES_FOLDER = letters_train_dir
@@ -173,7 +173,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Resize the letter so it fits in a 28x28 pixel box
-    image = resize_to_fit(image, 28, 28)
+    image = resize_to_fit(image, 32, 32)
 
     # Add a third channel dimension to the image to make Keras happy
     image = np.expand_dims(image, axis=2)
@@ -186,7 +186,7 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     labels_l_train.append(label)
 
 
-# In[9]:
+# In[46]:
 
 
 LETTER_IMAGES_FOLDER = letters_test_dir
@@ -202,7 +202,7 @@ for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER)):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Resize the letter so it fits in a 28x28 pixel box
-    image = resize_to_fit(image, 28, 28)
+    image = resize_to_fit(image, 32, 32)
 
     # Add a third channel dimension to the image to make Keras happy
     image = np.expand_dims(image, axis=2)
@@ -215,13 +215,13 @@ for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER)):
     labels_l_test.append(label)
 
 
-# In[10]:
+# In[47]:
 
 
 np.shape(data_l_test)
 
 
-# In[11]:
+# In[48]:
 
 
 # scale the raw pixel intensities to the range [0, 1] (this improves training)
@@ -229,7 +229,7 @@ X_l_train = np.array(data_l_train, dtype="float") / 255.0
 X_l_test = np.array(data_l_test, dtype="float") / 255.0
 
 
-# In[12]:
+# In[49]:
 
 
 # Convert the labels (letters) into one-hot encodings that Keras can work with
@@ -238,14 +238,14 @@ y_l_train = le.transform(np.array(labels_l_train))
 y_l_test = le.transform(np.array(labels_l_test))
 
 
-# In[13]:
+# In[50]:
 
 
 batch_size_train = 100
 batch_size_test = 1000
 
 
-# In[14]:
+# In[51]:
 
 
 X_l_train_t = (torch.from_numpy(X_l_train).float().transpose(1,3)).transpose(2,3)
@@ -255,7 +255,7 @@ train_data = torch.utils.data.TensorDataset(X_l_train_t, y_l_train_t)
 train_loader = torch.utils.data.DataLoader(train_data, batch_size=round(batch_size_train), shuffle=True)
 
 
-# In[15]:
+# In[52]:
 
 
 X_l_test_t = (torch.from_numpy(X_l_test).float().transpose(1,3)).transpose(2,3)
@@ -265,22 +265,22 @@ test_data = torch.utils.data.TensorDataset(X_l_test_t, y_l_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
-# In[28]:
+# In[53]:
 
 
 class Net(nn.Module):
     def __init__(self):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, 120)
-        self.fc2 = nn.Linear(120, 19)
+        self.conv1 = nn.Conv2d(1, 6, kernel_size=5)
+        self.conv2 = nn.Conv2d(6, 16, kernel_size=5)
+        self.fc1 = nn.Linear(400, 340)
+        self.fc2 = nn.Linear(340, 19)
         self.dropout = nn.Dropout(0.3)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, 320)
+        x = x.view(-1, 400)
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
@@ -288,7 +288,7 @@ class Net(nn.Module):
         return F.log_softmax(x, dim=0)
 
 
-# In[29]:
+# In[54]:
 
 
 def train(epoch, v=False):
@@ -311,7 +311,7 @@ def train(epoch, v=False):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[30]:
+# In[55]:
 
 
 def test():
@@ -331,7 +331,7 @@ def test():
     100. * correct / len(test_loader.dataset)))
 
 
-# In[32]:
+# In[56]:
 
 
 learning_rate = 0.01
@@ -339,14 +339,14 @@ log_interval = 10
 n_epochs = 100
 
 
-# In[33]:
+# In[57]:
 
 
 net = Net()
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
-# In[34]:
+# In[58]:
 
 
 train_losses = []
@@ -355,7 +355,7 @@ test_losses = []
 test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
 
 
-# In[35]:
+# In[59]:
 
 
 test()
@@ -364,7 +364,7 @@ for epoch in range(1, n_epochs + 1):
     test()
 
 
-# In[36]:
+# In[62]:
 
 
 LETTER_IMAGES_FOLDER = '../data/letters/test'
@@ -383,7 +383,7 @@ for d in os.listdir(LETTER_IMAGES_FOLDER):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         # Resize the letter so it fits in a 28x28 pixel box
-        image = resize_to_fit(image, 28, 28)
+        image = resize_to_fit(image, 32, 32)
 
         # Add a third channel dimension to the image to make Keras happy
         image = np.expand_dims(image, axis=2)
@@ -395,13 +395,13 @@ for d in os.listdir(LETTER_IMAGES_FOLDER):
     labels_test.append(d)
 
 
-# In[37]:
+# In[63]:
 
 
 np.shape(data_test[2])
 
 
-# In[38]:
+# In[64]:
 
 
 pred_test = []
@@ -415,7 +415,7 @@ for i, e in enumerate(labels_test):
     pred_test.append(y)
 
 
-# In[39]:
+# In[65]:
 
 
 correct = 0
@@ -426,8 +426,14 @@ for e, f in zip(pred_test, labels_test):
 correct
 
 
-# In[40]:
+# In[66]:
 
 
 correct/len(pred_test)
+
+
+# In[ ]:
+
+
+
 

@@ -13115,7 +13115,7 @@ div#notebook {
 
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -13151,7 +13151,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">relpath</span><span class="p">(</span><span class="s1">&#39;../data&#39;</span><span class="p">))</span>
@@ -13165,7 +13165,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">CAPTCHA_IMAGES_FOLDER</span> <span class="o">=</span> <span class="s2">&quot;../data/samples&quot;</span>
@@ -13196,7 +13196,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -13209,7 +13209,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">create_images</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">):</span>
@@ -13272,7 +13272,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">letters_train_dir</span> <span class="o">=</span> <span class="s1">&#39;../data/letters/train&#39;</span>
@@ -13296,7 +13296,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="prompt input_prompt">In&nbsp;[29]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">letters_test_dir</span> <span class="o">=</span> <span class="s1">&#39;../data/letters/test&#39;</span>
@@ -13320,7 +13320,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="prompt input_prompt">In&nbsp;[45]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">LETTER_IMAGES_FOLDER</span> <span class="o">=</span> <span class="n">letters_train_dir</span>
@@ -13336,7 +13336,7 @@ div#notebook {
     <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
 
     <span class="c1"># Resize the letter so it fits in a 28x28 pixel box</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">resize_to_fit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">resize_to_fit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 
     <span class="c1"># Add a third channel dimension to the image to make Keras happy</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -13356,7 +13356,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="prompt input_prompt">In&nbsp;[46]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">LETTER_IMAGES_FOLDER</span> <span class="o">=</span> <span class="n">letters_test_dir</span>
@@ -13372,7 +13372,7 @@ div#notebook {
     <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
 
     <span class="c1"># Resize the letter so it fits in a 28x28 pixel box</span>
-    <span class="n">image</span> <span class="o">=</span> <span class="n">resize_to_fit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">resize_to_fit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 
     <span class="c1"># Add a third channel dimension to the image to make Keras happy</span>
     <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -13392,7 +13392,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="prompt input_prompt">In&nbsp;[47]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data_l_test</span><span class="p">)</span>
@@ -13408,13 +13408,13 @@ div#notebook {
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[10]:</div>
+    <div class="prompt output_prompt">Out[47]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(1340, 28, 28, 1)</pre>
+<pre>(1340, 32, 32, 1)</pre>
 </div>
 
 </div>
@@ -13425,7 +13425,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="prompt input_prompt">In&nbsp;[48]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># scale the raw pixel intensities to the range [0, 1] (this improves training)</span>
@@ -13440,7 +13440,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="prompt input_prompt">In&nbsp;[49]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Convert the labels (letters) into one-hot encodings that Keras can work with</span>
@@ -13456,7 +13456,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[50]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">batch_size_train</span> <span class="o">=</span> <span class="mi">100</span>
@@ -13470,7 +13470,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="prompt input_prompt">In&nbsp;[51]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_l_train_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X_l_train</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
@@ -13487,7 +13487,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_l_test_t</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X_l_test</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
@@ -13504,22 +13504,22 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">Net</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Net</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">120</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">19</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="mi">340</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">340</span><span class="p">,</span> <span class="mi">19</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">max_pool2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv1</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">max_pool2d</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">conv2</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">320</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fc1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
         <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
@@ -13534,7 +13534,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
+<div class="prompt input_prompt">In&nbsp;[54]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">epoch</span><span class="p">,</span> <span class="n">v</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -13564,7 +13564,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[30]:</div>
+<div class="prompt input_prompt">In&nbsp;[55]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">test</span><span class="p">():</span>
@@ -13591,7 +13591,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[32]:</div>
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
@@ -13606,7 +13606,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[33]:</div>
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">net</span> <span class="o">=</span> <span class="n">Net</span><span class="p">()</span>
@@ -13620,7 +13620,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[34]:</div>
+<div class="prompt input_prompt">In&nbsp;[58]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_losses</span> <span class="o">=</span> <span class="p">[]</span>
@@ -13636,7 +13636,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[35]:</div>
+<div class="prompt input_prompt">In&nbsp;[59]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">test</span><span class="p">()</span>
@@ -13660,307 +13660,307 @@ div#notebook {
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-Test set: Avg. loss: 6.6338, Accuracy: 73/1340 (5%)
+Test set: Avg. loss: 6.6346, Accuracy: 77/1340 (5%)
 
 
-Test set: Avg. loss: 5.0913, Accuracy: 1017/1340 (75%)
+Test set: Avg. loss: 5.0590, Accuracy: 1001/1340 (74%)
 
 
-Test set: Avg. loss: 4.7036, Accuracy: 1125/1340 (83%)
+Test set: Avg. loss: 4.5781, Accuracy: 1131/1340 (84%)
 
 
-Test set: Avg. loss: 4.6005, Accuracy: 1197/1340 (89%)
+Test set: Avg. loss: 4.6224, Accuracy: 1170/1340 (87%)
 
 
-Test set: Avg. loss: 4.4569, Accuracy: 1220/1340 (91%)
+Test set: Avg. loss: 4.4489, Accuracy: 1193/1340 (89%)
 
 
-Test set: Avg. loss: 4.4172, Accuracy: 1233/1340 (92%)
+Test set: Avg. loss: 4.4378, Accuracy: 1213/1340 (90%)
 
 
-Test set: Avg. loss: 4.2449, Accuracy: 1247/1340 (93%)
+Test set: Avg. loss: 4.3169, Accuracy: 1224/1340 (91%)
 
 
-Test set: Avg. loss: 4.1579, Accuracy: 1249/1340 (93%)
+Test set: Avg. loss: 4.2878, Accuracy: 1235/1340 (92%)
 
 
-Test set: Avg. loss: 4.1776, Accuracy: 1260/1340 (94%)
+Test set: Avg. loss: 4.2559, Accuracy: 1239/1340 (92%)
 
 
-Test set: Avg. loss: 4.1557, Accuracy: 1259/1340 (93%)
+Test set: Avg. loss: 4.2216, Accuracy: 1252/1340 (93%)
 
 
-Test set: Avg. loss: 4.1878, Accuracy: 1248/1340 (93%)
+Test set: Avg. loss: 4.2756, Accuracy: 1227/1340 (91%)
 
 
-Test set: Avg. loss: 4.1171, Accuracy: 1256/1340 (93%)
+Test set: Avg. loss: 4.2199, Accuracy: 1248/1340 (93%)
 
 
-Test set: Avg. loss: 4.0616, Accuracy: 1259/1340 (93%)
+Test set: Avg. loss: 4.1892, Accuracy: 1246/1340 (92%)
 
 
-Test set: Avg. loss: 4.0562, Accuracy: 1271/1340 (94%)
+Test set: Avg. loss: 4.1845, Accuracy: 1251/1340 (93%)
 
 
-Test set: Avg. loss: 4.0543, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.1460, Accuracy: 1250/1340 (93%)
 
 
-Test set: Avg. loss: 4.0364, Accuracy: 1266/1340 (94%)
+Test set: Avg. loss: 4.1306, Accuracy: 1244/1340 (92%)
 
 
-Test set: Avg. loss: 4.0295, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.1296, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0432, Accuracy: 1262/1340 (94%)
+Test set: Avg. loss: 4.1229, Accuracy: 1255/1340 (93%)
 
 
-Test set: Avg. loss: 4.0191, Accuracy: 1271/1340 (94%)
+Test set: Avg. loss: 4.1202, Accuracy: 1253/1340 (93%)
 
 
-Test set: Avg. loss: 4.0178, Accuracy: 1263/1340 (94%)
+Test set: Avg. loss: 4.1271, Accuracy: 1245/1340 (92%)
 
 
-Test set: Avg. loss: 4.0381, Accuracy: 1257/1340 (93%)
+Test set: Avg. loss: 4.1057, Accuracy: 1250/1340 (93%)
 
 
-Test set: Avg. loss: 4.0242, Accuracy: 1259/1340 (93%)
+Test set: Avg. loss: 4.0820, Accuracy: 1255/1340 (93%)
 
 
-Test set: Avg. loss: 4.0397, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.1039, Accuracy: 1251/1340 (93%)
 
 
-Test set: Avg. loss: 4.0192, Accuracy: 1262/1340 (94%)
+Test set: Avg. loss: 4.1064, Accuracy: 1255/1340 (93%)
 
 
-Test set: Avg. loss: 4.0394, Accuracy: 1259/1340 (93%)
+Test set: Avg. loss: 4.0627, Accuracy: 1263/1340 (94%)
 
 
-Test set: Avg. loss: 4.0147, Accuracy: 1268/1340 (94%)
+Test set: Avg. loss: 4.0765, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0050, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.0815, Accuracy: 1253/1340 (93%)
 
 
-Test set: Avg. loss: 4.0180, Accuracy: 1267/1340 (94%)
+Test set: Avg. loss: 4.0537, Accuracy: 1261/1340 (94%)
 
 
-Test set: Avg. loss: 3.9995, Accuracy: 1276/1340 (95%)
+Test set: Avg. loss: 4.0749, Accuracy: 1251/1340 (93%)
 
 
-Test set: Avg. loss: 4.0073, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.0445, Accuracy: 1267/1340 (94%)
 
 
-Test set: Avg. loss: 3.9972, Accuracy: 1275/1340 (95%)
+Test set: Avg. loss: 4.0850, Accuracy: 1239/1340 (92%)
 
 
-Test set: Avg. loss: 4.0061, Accuracy: 1266/1340 (94%)
+Test set: Avg. loss: 4.0569, Accuracy: 1255/1340 (93%)
 
 
-Test set: Avg. loss: 4.0009, Accuracy: 1269/1340 (94%)
+Test set: Avg. loss: 4.0501, Accuracy: 1261/1340 (94%)
 
 
-Test set: Avg. loss: 4.0094, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0649, Accuracy: 1252/1340 (93%)
 
 
-Test set: Avg. loss: 3.9855, Accuracy: 1275/1340 (95%)
+Test set: Avg. loss: 4.0504, Accuracy: 1259/1340 (93%)
 
 
-Test set: Avg. loss: 4.0214, Accuracy: 1265/1340 (94%)
+Test set: Avg. loss: 4.0545, Accuracy: 1255/1340 (93%)
 
 
-Test set: Avg. loss: 4.0204, Accuracy: 1256/1340 (93%)
+Test set: Avg. loss: 4.0376, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0208, Accuracy: 1266/1340 (94%)
+Test set: Avg. loss: 4.0449, Accuracy: 1261/1340 (94%)
 
 
-Test set: Avg. loss: 3.9995, Accuracy: 1270/1340 (94%)
+Test set: Avg. loss: 4.0435, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0074, Accuracy: 1266/1340 (94%)
+Test set: Avg. loss: 4.0688, Accuracy: 1264/1340 (94%)
 
 
-Test set: Avg. loss: 4.0359, Accuracy: 1272/1340 (94%)
+Test set: Avg. loss: 4.0544, Accuracy: 1261/1340 (94%)
 
 
-Test set: Avg. loss: 4.0782, Accuracy: 1248/1340 (93%)
+Test set: Avg. loss: 4.0707, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0148, Accuracy: 1268/1340 (94%)
+Test set: Avg. loss: 4.0328, Accuracy: 1261/1340 (94%)
 
 
-Test set: Avg. loss: 4.0480, Accuracy: 1253/1340 (93%)
+Test set: Avg. loss: 4.0315, Accuracy: 1262/1340 (94%)
 
 
-Test set: Avg. loss: 4.0151, Accuracy: 1265/1340 (94%)
+Test set: Avg. loss: 4.0380, Accuracy: 1262/1340 (94%)
 
 
-Test set: Avg. loss: 4.0139, Accuracy: 1260/1340 (94%)
+Test set: Avg. loss: 4.0566, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0101, Accuracy: 1270/1340 (94%)
+Test set: Avg. loss: 4.0555, Accuracy: 1247/1340 (93%)
 
 
-Test set: Avg. loss: 4.0024, Accuracy: 1275/1340 (95%)
+Test set: Avg. loss: 4.0405, Accuracy: 1265/1340 (94%)
 
 
-Test set: Avg. loss: 4.0068, Accuracy: 1268/1340 (94%)
+Test set: Avg. loss: 4.0214, Accuracy: 1266/1340 (94%)
 
 
-Test set: Avg. loss: 4.0041, Accuracy: 1272/1340 (94%)
+Test set: Avg. loss: 4.0382, Accuracy: 1262/1340 (94%)
 
 
-Test set: Avg. loss: 4.0072, Accuracy: 1261/1340 (94%)
+Test set: Avg. loss: 4.0429, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0050, Accuracy: 1270/1340 (94%)
+Test set: Avg. loss: 4.0334, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0160, Accuracy: 1263/1340 (94%)
+Test set: Avg. loss: 4.0651, Accuracy: 1249/1340 (93%)
 
 
-Test set: Avg. loss: 3.9846, Accuracy: 1278/1340 (95%)
+Test set: Avg. loss: 4.0374, Accuracy: 1253/1340 (93%)
 
 
-Test set: Avg. loss: 3.9904, Accuracy: 1271/1340 (94%)
+Test set: Avg. loss: 4.0688, Accuracy: 1256/1340 (93%)
 
 
-Test set: Avg. loss: 4.0004, Accuracy: 1278/1340 (95%)
+Test set: Avg. loss: 4.0342, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0355, Accuracy: 1274/1340 (95%)
+Test set: Avg. loss: 4.0396, Accuracy: 1258/1340 (93%)
 
 
-Test set: Avg. loss: 4.0180, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0282, Accuracy: 1261/1340 (94%)
 
 
-Test set: Avg. loss: 4.0195, Accuracy: 1259/1340 (93%)
+Test set: Avg. loss: 4.0277, Accuracy: 1265/1340 (94%)
 
 
-Test set: Avg. loss: 4.0255, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0662, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0544, Accuracy: 1260/1340 (94%)
+Test set: Avg. loss: 4.0374, Accuracy: 1263/1340 (94%)
 
 
-Test set: Avg. loss: 4.0357, Accuracy: 1265/1340 (94%)
+Test set: Avg. loss: 4.0263, Accuracy: 1265/1340 (94%)
 
 
-Test set: Avg. loss: 4.0389, Accuracy: 1265/1340 (94%)
+Test set: Avg. loss: 4.0428, Accuracy: 1265/1340 (94%)
 
 
-Test set: Avg. loss: 4.0344, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.0244, Accuracy: 1266/1340 (94%)
 
 
-Test set: Avg. loss: 4.0368, Accuracy: 1271/1340 (94%)
+Test set: Avg. loss: 4.0345, Accuracy: 1267/1340 (94%)
 
 
-Test set: Avg. loss: 4.0351, Accuracy: 1270/1340 (94%)
+Test set: Avg. loss: 4.0356, Accuracy: 1267/1340 (94%)
 
 
-Test set: Avg. loss: 4.0052, Accuracy: 1274/1340 (95%)
+Test set: Avg. loss: 4.0359, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0397, Accuracy: 1274/1340 (95%)
+Test set: Avg. loss: 4.0445, Accuracy: 1259/1340 (93%)
 
 
-Test set: Avg. loss: 4.0485, Accuracy: 1272/1340 (94%)
+Test set: Avg. loss: 4.0568, Accuracy: 1263/1340 (94%)
 
 
-Test set: Avg. loss: 4.0321, Accuracy: 1268/1340 (94%)
+Test set: Avg. loss: 4.0513, Accuracy: 1258/1340 (93%)
 
 
-Test set: Avg. loss: 4.0221, Accuracy: 1267/1340 (94%)
+Test set: Avg. loss: 4.0335, Accuracy: 1265/1340 (94%)
 
 
-Test set: Avg. loss: 4.0557, Accuracy: 1270/1340 (94%)
+Test set: Avg. loss: 4.0426, Accuracy: 1263/1340 (94%)
 
 
-Test set: Avg. loss: 4.0598, Accuracy: 1267/1340 (94%)
+Test set: Avg. loss: 4.0329, Accuracy: 1273/1340 (95%)
 
 
-Test set: Avg. loss: 4.0450, Accuracy: 1259/1340 (93%)
+Test set: Avg. loss: 4.0254, Accuracy: 1268/1340 (94%)
 
 
-Test set: Avg. loss: 4.0100, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0313, Accuracy: 1273/1340 (95%)
 
 
-Test set: Avg. loss: 4.0143, Accuracy: 1266/1340 (94%)
+Test set: Avg. loss: 4.0410, Accuracy: 1268/1340 (94%)
 
 
-Test set: Avg. loss: 4.0468, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0402, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0311, Accuracy: 1276/1340 (95%)
+Test set: Avg. loss: 4.0357, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0441, Accuracy: 1270/1340 (94%)
+Test set: Avg. loss: 4.0317, Accuracy: 1268/1340 (94%)
 
 
-Test set: Avg. loss: 4.0250, Accuracy: 1266/1340 (94%)
+Test set: Avg. loss: 4.0474, Accuracy: 1258/1340 (93%)
 
 
-Test set: Avg. loss: 4.0523, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.0686, Accuracy: 1259/1340 (93%)
 
 
-Test set: Avg. loss: 4.0719, Accuracy: 1256/1340 (93%)
+Test set: Avg. loss: 4.0729, Accuracy: 1248/1340 (93%)
 
 
-Test set: Avg. loss: 4.0457, Accuracy: 1258/1340 (93%)
+Test set: Avg. loss: 4.0290, Accuracy: 1262/1340 (94%)
 
 
-Test set: Avg. loss: 4.0535, Accuracy: 1265/1340 (94%)
+Test set: Avg. loss: 4.1189, Accuracy: 1237/1340 (92%)
 
 
-Test set: Avg. loss: 4.0640, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.2449, Accuracy: 1205/1340 (89%)
 
 
-Test set: Avg. loss: 4.1037, Accuracy: 1256/1340 (93%)
+Test set: Avg. loss: 4.1693, Accuracy: 1229/1340 (91%)
 
 
-Test set: Avg. loss: 4.0618, Accuracy: 1268/1340 (94%)
+Test set: Avg. loss: 4.0936, Accuracy: 1249/1340 (93%)
 
 
-Test set: Avg. loss: 4.0558, Accuracy: 1272/1340 (94%)
+Test set: Avg. loss: 4.0797, Accuracy: 1253/1340 (93%)
 
 
-Test set: Avg. loss: 4.0632, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.0727, Accuracy: 1259/1340 (93%)
 
 
-Test set: Avg. loss: 4.0498, Accuracy: 1274/1340 (95%)
+Test set: Avg. loss: 4.0615, Accuracy: 1252/1340 (93%)
 
 
-Test set: Avg. loss: 4.0626, Accuracy: 1275/1340 (95%)
+Test set: Avg. loss: 4.0804, Accuracy: 1265/1340 (94%)
 
 
-Test set: Avg. loss: 4.1353, Accuracy: 1253/1340 (93%)
+Test set: Avg. loss: 4.0818, Accuracy: 1266/1340 (94%)
 
 
-Test set: Avg. loss: 4.0616, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0212, Accuracy: 1277/1340 (95%)
 
 
-Test set: Avg. loss: 4.0558, Accuracy: 1261/1340 (94%)
+Test set: Avg. loss: 4.0741, Accuracy: 1252/1340 (93%)
 
 
-Test set: Avg. loss: 4.0390, Accuracy: 1253/1340 (93%)
+Test set: Avg. loss: 4.0359, Accuracy: 1262/1340 (94%)
 
 
-Test set: Avg. loss: 4.0925, Accuracy: 1264/1340 (94%)
+Test set: Avg. loss: 4.0525, Accuracy: 1270/1340 (94%)
 
 
-Test set: Avg. loss: 4.0782, Accuracy: 1271/1340 (94%)
+Test set: Avg. loss: 4.0431, Accuracy: 1266/1340 (94%)
 
 
-Test set: Avg. loss: 4.0465, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0281, Accuracy: 1260/1340 (94%)
 
 
-Test set: Avg. loss: 4.0376, Accuracy: 1276/1340 (95%)
+Test set: Avg. loss: 4.0423, Accuracy: 1275/1340 (95%)
 
 
-Test set: Avg. loss: 4.1373, Accuracy: 1262/1340 (94%)
+Test set: Avg. loss: 4.0398, Accuracy: 1257/1340 (93%)
 
 
-Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
+Test set: Avg. loss: 4.0516, Accuracy: 1258/1340 (93%)
 
 </pre>
 </div>
@@ -13972,7 +13972,7 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[36]:</div>
+<div class="prompt input_prompt">In&nbsp;[62]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">LETTER_IMAGES_FOLDER</span> <span class="o">=</span> <span class="s1">&#39;../data/letters/test&#39;</span>
@@ -13991,7 +13991,7 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
         <span class="n">image</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2GRAY</span><span class="p">)</span>
 
         <span class="c1"># Resize the letter so it fits in a 28x28 pixel box</span>
-        <span class="n">image</span> <span class="o">=</span> <span class="n">resize_to_fit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">resize_to_fit</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 
         <span class="c1"># Add a third channel dimension to the image to make Keras happy</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -14010,7 +14010,7 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[37]:</div>
+<div class="prompt input_prompt">In&nbsp;[63]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data_test</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
@@ -14026,13 +14026,13 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[37]:</div>
+    <div class="prompt output_prompt">Out[63]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(5, 28, 28, 1)</pre>
+<pre>(5, 32, 32, 1)</pre>
 </div>
 
 </div>
@@ -14043,7 +14043,7 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[38]:</div>
+<div class="prompt input_prompt">In&nbsp;[64]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">pred_test</span> <span class="o">=</span> <span class="p">[]</span>
@@ -14064,7 +14064,7 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[39]:</div>
+<div class="prompt input_prompt">In&nbsp;[65]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
@@ -14089,287 +14089,287 @@ Test set: Avg. loss: 4.0912, Accuracy: 1273/1340 (95%)
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>d3c8y d3c8y
-ny3dp ny5dp
+<pre>d3c6y d3c8y
+ny5fp ny5dp
 675p3 675p3
-g7ex5 g3ex3
-c7d5n 22d5n
-ydcpw xbcbx
-eg783 2g783
-3d2p4 3d7bd
-f2bge f2fge
-7gbge 7gnge
-37d5e 37d52
-264dn 664dn
-54g2e 5ng6e
-g7wxw g7wxw
-67gb3 62nb3
+gdpx3 g3ex3
+72d5n 22d5n
+7bebf xbcbx
+2p783 2g783
+8dwxf 3d7bd
+c2fge f2fge
+7d6ge 7gnge
+37g52 37d52
+564dm 664dn
+5ngpe 5ng6e
+d7yxw g7wxw
+62nb3 62nb3
 6bxwg 6bxwg
-dpeyd dpbyd
-gm47f wm47f
-xbmcw wbncw
-532bm 5325m
-2n736 2n73f
-ngy3x dy3cx
-7cpwb 3cpwb
-dw6me dw6mn
-5b245 5n245
-4p2yg 4n2yg
-573ew 573d8
-m7gxf n7g4f
+2pbyd dpbyd
+ym67f wm47f
+xbncw wbncw
+532by 5325m
+2n73f 2n73f
+8fy3x dy3cx
+3cpwb 3cpwb
+dy6mn dw6mn
+bn24y 5n245
+4b2yg 4n2yg
+573e8 573d8
+n7g4f n7g4f
 8y63f 8y63f
-my3n6 ny3nn
-7xc2n 2xc2n
+my3f6 ny3nn
+25xpn 2xc2n
 658xe 658xe
-x24me x277e
-nmy2x nmy2x
-7bwpd nbwpn
-y87ny yw7ny
-c8we5 c6we6
-mgp48 bgb48
-wx3n8 wxcn8
-n7y3p 4743p
-d645x de45x
+x27ne x277e
+n3y2x nmy2x
+mbwp4 nbwpn
+5w7n4 yw7ny
+c6web c6we6
+fgy48 bgb48
+w6cn8 wxcn8
+87d3p 4743p
+de45x de45x
 gc83b gc83b
 gw468 gw468
-2y46p 25m6p
-7gebf 7g3nf
-76y5f 76y6f
-dy26n dn26n
+2bm6p 25m6p
+5xgnf 7g3nf
+7by8f 76y6f
+gm25n dn26n
 bgxcd bgxcd
-p2fen b2nen
-fbpwc fbp2c
+b74ep b2nen
+fbm2c fbp2c
 dmx8p dmx8p
-d4y82 d4n82
-p6mb8 p6mn8
-xyp5m yyg5g
+d4b82 d4n82
+p6yn8 p6mn8
+fwd5m yyg5g
 c7gb3 c7gb3
-gfx34 efx34
-ng2w5 ng2gw
-y5g87 y5g87
-6m4wx nn4wx
-w276m w7e6m
-42g6m 4egem
-4gbxf 4gb3f
-d2wpn dw3nn
-m8b57 nnn57
-6dnx7 6dmx7
-p8gyf p8wwf
-3p4mn 3p4nn
-38fg2 387g2
-x45n4 x44n4
-p3c7x 33f7m
-83mp5 43mn5
-4e8y7 7e2y7
-xemyg xemyg
+efx34 efx34
+mg2c7 ng2gw
+y3g87 y5g87
+m84cx nn4wx
+pfg6n w7e6m
+4pgcm 4egem
+4gb3f 4gb3f
+d8w3n dw3nn
+ngm57 nnn57
+6dmx7 6dmx7
+p87gf p8wwf
+3p4n7 3p4nn
+387g2 387g2
+x8dn4 x44n4
+36f7m 33f7m
+43mn5 43mn5
+5e2yf 7e2y7
+x8myg xemyg
 exycn exycn
-36p4m 8684m
-y48g3 y48c3
-fdxpn mdxpn
-dxfe8 dnmd8
-p8bgx p8ngx
+8654p 8684m
+y48c3 y48c3
+7dxpn mdxpn
+dnme8 dnmd8
+p86gf p8ngx
 64b3p 64b3p
-bng2f bnc2f
-w43fn w4cnn
+bnc26 bnc2f
+w4cn7 w4cnn
 c6745 c6745
-pc583 pcede
-pgy7e pgm2e
-3ebpw 3ebpw
-f728n f228n
-7gm83 7gmf3
-mgw3n mgw3n
-8g34m 8n34n
-yfwp4 77wp4
-fg6xb fc6xb
-myg68 mye68
-m2dn6 728n8
+pcedy pcede
+pgm7e pgm2e
+4mbpw 3ebpw
+f228e f228n
+7gmf3 7gmf3
+fgw3p mgw3n
+8n3fp 8n34n
+2fypd 77wp4
+fc6xb fc6xb
+myb68 mye68
+72bn6 728n8
 cpe63 cpe63
-25egp 25egp
-mg824 yy824
-e7bmn e3ndn
-xb7cw xyyyw
-6pwcf 6pwcn
+25emp 25egp
+gc824 yy824
+e3x2g e3ndn
+xy6e8 xyyyw
+8pwcn 6pwcn
 bpwd7 bpwd7
-6fg82 6fg8c
-m452d m457d
-5gdwb mgdwb
-3mxdn 3mxdn
+6fg8c 6fg8c
+m45gd m457d
+mgfxb mgdwb
+3mxde 3mxdn
 cwgyx cwgyx
-5g8d3 5gcd3
-e8x47 28x47
-ndp7b ndg2b
-d8mcn d8xcn
-f35xp f35xp
-ecd8w ecd4w
+5gcd3 5gcd3
+28x47 28x47
+w872b ndg2b
+d8xcn d8xcn
+f35xe f35xp
+pcd4w ecd4w
 64m82 64m82
-p2bgx p2x7x
-c8gnd g8gnd
-x4dp5 x4gg5
-pewyd ppwyd
-8wb67 8db67
-pwg24 p8c24
-nmp4e nnp4e
-gwb53 gwn53
-gc27f gc277
-846fe 85622
-c2bn8 cnmnn
+m2y7w p2x7x
+y8g6d g8gnd
+x4ge5 x4gg5
+epwyd ppwyd
+8gb67 8db67
+p8c24 p8c24
+mn64e nnp4e
+gwm53 gwn53
+gc254 gc277
+856n2 85622
+cgmnw cnmnn
 xc68n xc68n
-8xwp7 bdbb3
-fp7w5 mp7wp
-6dnm3 6gnm3
-2wnd7 3wnd3
-dc2m8 fc2ff
-6e2by 6e2dg
-6g2b5 662bw
-pg26m pg2pm
+fgcb3 bdbb3
+megyp mp7wp
+6gym3 6gnm3
+5wmd3 3wnd3
+mc2dw fc2ff
+6e24g 6e2dg
+562mw 662bw
+6g3by pg2pm
 e6b7y e6b7y
 pe4xn pe4xn
-mng28 mmg2m
-npxb7 npxb7
-2w4y7 2w4y7
-f3ypb 3ye2e
-n4b5m n4b4m
-gfny5 dbny3
+6yg2n mmg2m
+4pxb7 npxb7
+pw4y7 2w4y7
+n3ype 3ye2e
+n4bde n4b4m
+dbny3 dbny3
 n7ebx n7ebx
 w4nfx w4nfx
-fnpw3 fxpw3
-fexdm 5expp
-mxy8w mxyxw
+fxpw3 fxpw3
+5exbp 5expp
+mxypw mxyxw
 w2e87 w2e87
-py7fb pyefb
-g8fe3 gdng3
+pyefb pyefb
+gcfe3 gdng3
 efgx5 efgx5
-wnym3 wmpmp
-fg8n4 fg8n4
-3enw7 3eny7
-8bf35 8b735
-bywe2 xxw44
-7fgey f7cey
-yc2bd wc2bd
-68nmc 6wnyc
-d2me7 dnne7
-7gbnx 7nnnx
-7gxb6 7dxbd
-23f6w 24f6w
-4xcme nxcmn
-fdp84 bdg84
-7p85c 7p852
+weg48 wmpmp
+fc8n3 fg8n4
+3eny7 3eny7
+8b7g5 8b735
+pxwe8 xxw44
+4fcey f7cey
+wc2bd wc2bd
+fdnxc 6wnyc
+dmne7 dnne7
+7mfex 7nnnx
+7dfbn 7dxbd
+24f6w 24f6w
+n8cme nxcmn
+bcp84 bdg84
+7p8f2 7p852
 3ygde 3ygde
-dpxn7 gpxng
-ygbwe ygfwe
+cpx4g gpxng
+yg8we ygfwe
 4gycb 4gycb
-87nyw 87nym
-pf6y4 w6ny4
-5byd7 5bnd7
+87nym 87nym
+mfbg4 w6ny4
+5bnd7 5bnd7
 xdcn4 xdcn4
-p8mbn pwmbn
+p4mbe pwmbn
 57wdp 57wdp
-cwm4y cwmny
+cwmny cwmny
 cd4eg cd4eg
-cem23 een23
-58b5m 58b5m
+cen23 een23
+d8b6m 58b5m
 8npe3 8npe3
-gd4mf gd4mf
-57n8c 5mf7c
+gd7mf gd4mf
+5p7fc 5mf7c
 6mygb 6mygb
-p52fn p57fn
-nfbg5 nfbg8
-63pxe 63pxe
-n5cg7 n5cm7
-w27bn w52fn
-4y3ex 4ycex
-ygp7c yge7c
-36nby 56m6y
+p5xfn p57fn
+nfbg8 nfbg8
+43pxe 63pxe
+n5cw7 n5cm7
+xd5fn w52fn
+4ypef 4ycex
+yge7c yge7c
+5xm8y 56m6y
 e46yw e46yw
-gyc3m gnc3n
-pxne8 pxne8
-x8e6n x8e8n
+gwc3y gnc3n
+bxme8 pxne8
+x8edn x8e8n
 pcm7f pcm7f
-m2c85 n2c85
-wxfey xxney
-4ygwd nn6w6
-4bcgp nbcgb
-4cm2p 4cn7b
-n2gx7 n2gmg
-m3wby m3wfw
-y4c58 y3c58
-p287n pp87n
+n2c85 n2c85
+cx8ey xxney
+nbdw3 nn6w6
+mfcgb nbcgb
+4cnwb 4cn7b
+n2y8p n2gmg
+m24fx m3wfw
+y3p58 y3c58
+pb37n pp87n
 gy8xb gy8xb
-4nfx3 nnfx3
+mnfx3 nnfx3
 x3deb x3deb
-gw5n3 gm6nn
-f6py8 f6ww8
-8b2m4 8bbm4
-gxm8p e6m6p
+ge5pn gm6nn
+f6xg8 f6ww8
+8cfm4 8bbm4
+e6m5p e6m6p
 f85y3 f85y3
-b642p b6f2p
-y2x8p y7x8p
-cpn8g f8f8g
-y326y y32yy
-c2dmc cndmc
-3ym7f 3ym7f
-mefbd befbd
-w6yne w6yne
-f5cn2 f5cm2
-gbxwc gfxcc
-6753n f753f
-mfcb5 nfcb5
-3nmpw 3nnpw
-3c8nf bc8nf
-ewmx8 ewnx8
-g86fm d666m
-wnf85 gnf85
-g2bnw g2fnw
-byc82 byc82
-xng3y xnd3y
-e8mx7 gpnxn
-6g3p5 deep5
-5x5nc 5x5nx
-2xbxm 2x7bm
-pwn5e pwn5e
-b5m7f b5nmm
-3fd8g nfd8g
-7dpc2 7dgc2
-d2ybw d2ycw
-x3bwf x3fwf
-n3xfg n3xfg
-2emf4 2enf4
-fp762 fp762
-dyfgn byfgn
-4new5 4m2w5
-8gy54 8w754
-p5nce p5nce
-m4fd8 m4fd8
-d78y5 d22y5
-n7dc4 mn5c4
-wwm46 wwmn6
-my24e my84e
+m6f2p b6f2p
+y7x8e y7x8p
+78ndg f8f8g
+y32b4 y32yy
+cpdme cndmc
+3yb4f 3ym7f
+befyd befbd
+w6ybe w6yne
+f5cm2 f5cm2
+nfx3c gfxcc
+4753c f753f
+nfdb5 nfcb5
+3nfpw 3nnpw
+bc8nf bc8nf
+ewnx8 ewnx8
+d5nfw d666m
+gpf85 gnf85
+g284w g2fnw
+bym82 byc82
+xmd3y xnd3y
+gc4xn gpnxn
+dbmp5 deep5
+5x5n2 5x5nx
+2x4fg 2x7bm
+bwn5e pwn5e
+b5gf7 b5nmm
+nfd8g nfd8g
+7d6e3 7dgc2
+d2ycw d2ycw
+x3dwb x3fwf
+m3xfg n3xfg
+2enfy 2enf4
+fp7w2 fp762
+5yfgn byfgn
+4m2w5 4m2w5
+8gw74 8w754
+p5bce p5nce
+m3fd8 m4fd8
+nx2y5 d22y5
+n7ecx mn5c4
+fymn6 wwmn6
+my84c my84e
 467d5 467d5
-dd8me ddcne
-nb8we nbp3e
-pmd3w pmd3w
+dfcne ddcne
+fbc4e nbp3e
+pmd3y pmd3w
 fcey3 fcey3
-weyp7 w2yp7
-n3bw6 n3bm6
-n265y n265y
-bp2dy bp2d4
-6wxf8 nxxf8
-x467g x4f7g
-n3f6x n3m6x
-geyw4 gegw4
+wcgp7 w2yp7
+n3bm6 n3bm6
+n26my n265y
+5p2d4 bp2d4
+e5xf8 nxxf8
+x4f7p x4f7g
+n376x n3m6x
+n8dw4 gegw4
 </pre>
 </div>
 </div>
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[39]:</div>
+    <div class="prompt output_prompt">Out[65]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>64</pre>
+<pre>74</pre>
 </div>
 
 </div>
@@ -14380,7 +14380,7 @@ geyw4 gegw4
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[40]:</div>
+<div class="prompt input_prompt">In&nbsp;[66]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">correct</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">pred_test</span><span class="p">)</span>
@@ -14396,17 +14396,30 @@ geyw4 gegw4
 
 <div class="output_area">
 
-    <div class="prompt output_prompt">Out[40]:</div>
+    <div class="prompt output_prompt">Out[66]:</div>
 
 
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>0.23880597014925373</pre>
+<pre>0.27611940298507465</pre>
 </div>
 
 </div>
 
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
 </div>
 </div>
 

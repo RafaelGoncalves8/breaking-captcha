@@ -56,13 +56,13 @@ for image_file in paths.list_images(LETTER_IMAGES_FOLDER):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
     # Resize the letter so it fits in a 28x28 pixel box
-    image = resize_to_fit(image, 28, 28)
+    image = resize_to_fit(image, 32, 32)
 
     # Add a third channel dimension to the image to make Keras happy
     image = np.expand_dims(image, axis=2)
 
     # Grab the name of the letter based on the folder it was in
-    label = image_file.split(os.path.sep)[-2]
+    label = image_file.split(os.path.sep)[-1].split('.')[-2].split('-')[1]
 
     # Add the letter image and it's label to our training data
     data.append(image)
@@ -119,6 +119,12 @@ test_data = torch.utils.data.TensorDataset(X_test_t, y_test_t)
 test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
 
 
+# In[ ]:
+
+
+
+
+
 # In[10]:
 
 
@@ -145,16 +151,16 @@ for i in range(6):
 class Net(nn.Module):
     def __init__(self, H, D):
         super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.fc1 = nn.Linear(320, H)
+        self.conv1 = nn.Conv2d(1, 6, kernel_size=5)
+        self.conv2 = nn.Conv2d(6, 16, kernel_size=5)
+        self.fc1 = nn.Linear(400, H)
         self.fc2 = nn.Linear(H, 32)
         self.dropout = nn.Dropout(D)
 
     def forward(self, x):
         x = F.relu(F.max_pool2d(self.conv1(x), 2))
         x = F.relu(F.max_pool2d(self.conv2(x), 2))
-        x = x.view(-1, 320)
+        x = x.view(-1, 400)
         x = F.relu(self.fc1(x))
         x = self.dropout(x)
         x = self.fc2(x)
@@ -165,7 +171,7 @@ class Net(nn.Module):
 # In[13]:
 
 
-net = Net(50, 0.5)
+net = Net(120, 0.3)
 optimizer = optim.Adam(net.parameters(), lr=learning_rate)
 
 
@@ -201,10 +207,10 @@ def train(epoch, v=True):
         torch.save(optimizer.state_dict(), 'optimizer.pth')
 
 
-# In[16]:
+# In[52]:
 
 
-def test():
+def test(v = 0):
     net.eval()
     test_loss = 0
     correct = 0
@@ -216,22 +222,25 @@ def test():
             correct += pred.eq(target.data.view_as(pred)).sum()
     test_loss /= len(test_loader.dataset)
     test_losses.append(test_loss)
-    print('\nTest set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
-    test_loss, correct, len(test_loader.dataset),
-    100. * correct / len(test_loader.dataset)))
+    if v:
+        print('Test set: Avg. loss: {:.4f}, Accuracy: {}/{} ({:.0f}%)\n'.format(
+        test_loss, correct, len(test_loader.dataset),
+        100. * correct / len(test_loader.dataset)))
+    acc = correct.item()
+    return acc
 
 
-# In[17]:
+# In[45]:
 
 
 n_epochs = 30
-test()
+test(1)
 for epoch in range(1, n_epochs + 1):
     train(epoch)
-    test()
+    test(1)
 
 
-# In[18]:
+# In[46]:
 
 
 fig = plt.figure()
@@ -243,28 +252,46 @@ plt.ylabel('negative log likelihood loss')
 plt.show()
 
 
-# In[19]:
+# In[55]:
 
 
 n_epochs = 100
+cv = KFold()
+global acc
 
-for H in [50, 120, 320]:
-    for D in [0, 0.3, 0.5, 0.7]:
-        net = Net(H, D)
-        optimizer = optim.Adam(net.parameters(), lr=learning_rate)
-        
-        train_losses = []
-        train_counter = []
-        test_losses = []
-        test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
-        
-        print("Net with H = {}, D = {}".format(H, D))
-        
-        test()
-        for epoch in range(1, n_epochs + 1):
-            train(epoch, False)
-            test()
+for H in [60, 120, 340]:
+    for D in [0, 0.3, 0.5]:
+        acc_avg = 0
+        for mask_train, mask_test in cv.split(X_train_t):
             
+            test_data = torch.utils.data.TensorDataset(X_train_t[mask_test], y_train_t[mask_test])
+            test_loader = torch.utils.data.DataLoader(test_data, batch_size=batch_size_test, shuffle=True)
+            
+            train_data = torch.utils.data.TensorDataset(X_train_t[mask_train], y_train_t[mask_train])
+            train_loader = torch.utils.data.DataLoader(train_data, batch_size=batch_size_test, shuffle=True)
+             
+            net = Net(H, D)
+            optimizer = optim.Adam(net.parameters(), lr=learning_rate)
+
+            train_losses = []
+            train_counter = []
+            test_losses = []
+            test_counter = [i*len(train_loader.dataset) for i in range(n_epochs + 1)]
+
+            print("Net with H = {}, D = {}".format(H, D))
+
+            acc = test(0)
+            max_acc = acc
+            for epoch in range(1, n_epochs + 1):
+                train(epoch, False)
+                acc = test(0)
+                if acc > max_acc:
+                    max_acc = acc
+            
+            acc_avg += max_acc/len(test_loader.dataset)
+        
+        print("Avg accuracy: {}".format(acc_avg/3))
+
         fig = plt.figure()
         plt.plot(train_counter, train_losses, color='blue')
         plt.scatter(test_counter, test_losses, color='red')
@@ -273,6 +300,18 @@ for H in [50, 120, 320]:
         plt.ylabel('negative log likelihood loss')
         plt.title('Learning curve for H = {}, D = {}'.format(H, D))
         plt.show()   
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
 
 
 # In[ ]:
