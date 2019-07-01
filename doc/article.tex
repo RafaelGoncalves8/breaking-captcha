@@ -29,6 +29,9 @@
 \makeatother
 \usepackage[ocgcolorlinks]{ocgx2}
 
+\rhead{}
+\lhead{}
+
 \sloppy
 
 
@@ -36,7 +39,8 @@
 
 \author{Rafael Gonçalves \and Thomás Portugal}
 
-\address{Departamento de Engenharia de Computa\c{c}\~{a}o e Automa\c{c}\~{a}o Industrial (DCA) \\
+\address{
+    % Departamento de Engenharia de Computa\c{c}\~{a}o e Automa\c{c}\~{a}o Industrial (DCA) \\
   Faculdade de Engenharia El\'{e}trica e de Computa\c{c}\~{a}o (FEEC) \\
   Universidade Estadual de Campinas (Unicamp)\\
   CEP 13083-852 -- Campinas, SP, Brasil
@@ -69,19 +73,19 @@
 CAPTCHA (\em Completely Automated Public Turing test to tell Computers and Humans Apart\em ) é um mecanismo utilizado em serviços digitais para garantir que softwares automatizados não peçam acesso em excesso ou de maneira torpe, preservando a integridade e a confiabilidade de tais serviços. Normalmente um CAPTCHA é uma imagem gerada por um computador, com caracteres distorcidos. A intenção é que seja uma tarefa relativamente fácil para uma pessoa executar, mas razoavelmente complicada, do ponto de vista computacional.
 
 Como o CAPTCHA vem sendo extensamente usado como a primeira linha de defesa contra ataques DDoS (\em Distributed Denial of Services\em ) e afins, saber o quanto essa ferramenta é segura no contexto atual é de suma importância.
-Este trabalho visa desenvolver um sistema, baseado em redes neurais convolucionais e em um algoritmo de clusterização, para a identificação dos caracteres apresentados em imagens de CAPTCHA coletadas do banco de dados do site Kaggle \cite{data}.
+Este trabalho visa desenvolver um sistema, baseado em redes neurais convolucionais para a classificação e k-means para a clusterização, visando a identificação dos caracteres apresentados em imagens de CAPTCHA coletadas do banco de dados do site Kaggle \cite{data}.
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \section{Proposta}
   \label{sec:detalhes}
 
-  O problema principal foi dividido em dois subproblemas: um de segmentação de imagem utilizando uma algoritmo de aprendizado não supervisionado (clusterização) e outro de classificação de imagens. Estes foram baseados em \cite{kopp2017}.
+  O problema principal foi dividido em dois subproblemas: um de segmentação de imagem utilizando um algoritmo de aprendizado não supervisionado (clusterização) e outro de classificação de imagens. Esta abordagem foi baseada em \cite{kopp2017}.
 
 Antes da segmentação da imagem, houve um trabalho de pré-processamento dos dados baseado em \cite{proc}. Foram aplicados filtros para diminuir o nível de ruído da imagem, facilitando o trabalho de segmentação. 
 
 A parte de clusterização envolveu determinar em que regiões da imagem estavam os caracteres. Em imagens geradas por CAPTCHA, frequentemente, há sobreposição de letras e números, além de ruídos e manchas que não representam caracter nenhum. Estas artimanhas são utilizadas justamente para dificultar a ação de algoritmos sobre as imagens. Com o uso de clusterização, os caracteres foram identificados e a imagem foi cortadas para o uso posterior na etapa de classificação. 
 
-Na etapa de classificação, os fragmentos selecionados na etapa anterior, são separados em treino e teste, e inseridos na entrada de uma rede neural. Essa rede neural foi treinada para identificar os dígitos individualmente. Após ser aplicada nas amostras de teste, os caracteres foram identificados e a previsão da imagem juntou as saídas individuais de cada amostra e identificou os caracteres gerados pelo CAPTCHA originalmente.
+Na etapa de classificação, os fragmentos selecionados na etapa anterior, são separados em treino e validação, e inseridos na entrada de uma rede neural. Essa rede neural foi treinada para identificar os caracteres individualmente. Após o modelo ser escolhido com base em seu desempenho nas amostras de validação, os caracteres foram identificados e a previsão da imagem concatenou as saídas individuais de cada amostra e identificou os caracteres gerados pelo CAPTCHA originalmente.
 
 
 
@@ -114,7 +118,7 @@ Foram testados 3 filtros diferentes (Figura ~\ref{fig:filters}) para a primeira 
 
 Para separar os caracteres presentes na imagem processada, foi utilizado um algoritimo de clusterização e posteriormente expandiu-se um retângulo ao redor dos centroides dos clusters para determinar a região da imagem a ser salva como um caractere.
 
-A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O dataset utilizado, tinha a especificação de apenas de 5 caracteres por imagem. Assim, o número de 5 clusters foi determinado previamente. Por existir caracteres sobrepostos, a clusterização não identificava as fronteiras entre os caracteres de maneira tão eficiente. Além disso, o algoritmo, recorrentemente, identificava clusters na vertical, o que não é adequado já que os caracteres são dispostos na horizontal (Figura ~\ref{fig:kmeans2d}). 
+A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O dataset utilizado, tinha a especificação de apenas de 5 caracteres por imagem. Assim, o número de 5 clusters foi determinado previamente. Por existir caracteres sobrepostos, a clusterização não identificava as fronteiras entre os caracteres de maneira tão eficiente. Além disso, o algoritmo, recorrentemente, identificou clusters na vertical, o que não é adequado já que os caracteres são dispostos na horizontal (Figura ~\ref{fig:kmeans2d}). 
 
 A solução encontrada foi projetar os dados no plano horizontal e em seguida aplicar o k-means apenas em 1 dimensão. Com isso, a informação utilizada de fato foi a posição horizontal dos centroides. Para cortar as imagens os centros foram posicionados no meio do eixo vertical (Figura ~\ref{fig:kmeans1d}).
 
@@ -132,7 +136,7 @@ A solução encontrada foi projetar os dados no plano horizontal e em seguida ap
         \label{fig:kmeans1d}\par}
   \end{figure}
 
-Com as posições do centro, foi necessário determinar os tamanhos para realizar o corte na imagem. Através de tamanhos pré-estabelecidos, foi determinado o tamanho de 21 pixels a direita e a esquerda do centro gerado pelo k-means. Essas imagens foram utilizadas na entrada da rede neural. 
+Com as posições dos centros definidas, foi necessário determinar os tamanhos para realizar o corte na imagem. Através de tamanhos pré-estabelecidos, foi determinado o tamanho de 21 pixels à direita e à esquerda do centro gerado pelo k-means. Essas imagens foram utilizadas na entrada da rede neural. 
 
 \subsection{Reconhecimento de Caracteres}
 \label{ssec:convnet}
@@ -155,7 +159,7 @@ A etapa de reconhecimento de caracteres consistiu em uma rede neural convolucion
         \label{fig:nn}\par}
   \end{figure}
 
-O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{ex}).
+O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{tab:ex}).
 
 \begin{table}[H]
     {\centering
@@ -195,7 +199,7 @@ Como mostrado na Tabela ~\ref{tab:ex}, a acurácia do modelo de reconhecimento d
         \label{fig:pred}\par}
 \end{figure}
 
-A acurácia do modelo completo (classificação do CAPTCHA todo) foi de $0.3246$. Algumas das predições podem ser vistas na Tabela ~\ref{tab:pred} 
+A acurácia do modelo completo (classificação do CAPTCHA todo) foi de $0.3246$. Algumas das predições podem ser vistas na Tabela ~\ref{tab:pred}.
 
 
 \begin{table}[H]
@@ -231,7 +235,7 @@ A matriz de confusão (Figura ~\ref{fig:confusion}) aponta que a maior parte das
 
 \section{Conclus\~{o}es}
 
-Foi possível desenvolver um sistema que identifica imagens de CAPTCHA com uma acurácia total de $0.3246$ para os dados contidos no \em dataset \em \cite{data}. O valor é baixo comparado com os valores atingidos por outros modelos de classificação de textos, mas mostra uma vulnerabilidade bastante relevante presente no tipo de CAPTCHA analisado. Para trabalhos posteriores, podem ser testados outros modelos de clusterização para que este englobe CAPTCHA’s com diferentes números de caracteres. Na parte de reconhecimento de caracteres, podem ser testadas redes neurais com diferentes arquiteturas, bem como outros modelos de classificação. É possível também que os métodos aqui desenvolvidos sejam usados em conjunto com bancos de dados com mais imagens para melhorar seu desempenho.
+Foi possível desenvolver um sistema que identifica imagens de CAPTCHA com uma acurácia total de $0.3246$ para os dados contidos no \em dataset \em \cite{data}. O valor é baixo se comparado com os valores atingidos por outros modelos de classificação de textos atuais, mas é suficiente para mostrar uma vulnerabilidade bastante relevante presente no tipo de CAPTCHA analisado. Para trabalhos posteriores, podem ser testados outros modelos de clusterização para que este englobe CAPTCHA’s com diferentes números de caracteres. Na parte de reconhecimento de caracteres, podem ser testadas redes neurais com diferentes arquiteturas, bem como outros modelos de classificação. É possível também que os métodos aqui desenvolvidos sejam usados em conjunto com bancos de dados com mais imagens para melhorar seu desempenho.
 % Outra melhoria que pode ser feita é o uso de outras métricas que levem em conta um banco de dados com classes desbalanceadas.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
