@@ -10,19 +10,37 @@
 \usepackage[hang]{subfigure}
 \usepackage{psfrag}
 \usepackage{booktabs}
+\usepackage[
+    breaklinks=true,    
+    allbordercolors=blue,
+%    ocgcolorlinks=true,
+    colorlinks=true,
+    anchorcolor=blue, 
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    menucolor=blue,
+    runcolor=blue,
+    urlcolor=blue,
+    linktoc=all
+]{hyperref}
+\makeatletter
+    \g@addto@macro{\UrlBreaks}{\do\/\do\-\do\_}
+\makeatother
+\usepackage[ocgcolorlinks]{ocgx2}
 
 \sloppy
 
 
-\title{Classificação de CAPTCHA's}
+\title{Resolução de CAPTCHA's utilizando Redes Neurais Convolucionais}
 
-\author{Thomás Portugal \and Rafael Gonçalves}
+\author{Rafael Gonçalves \and Thomás Portugal}
 
 \address{Departamento de Engenharia de Computa\c{c}\~{a}o e Automa\c{c}\~{a}o Industrial (DCA) \\
   Faculdade de Engenharia El\'{e}trica e de Computa\c{c}\~{a}o (FEEC) \\
   Universidade Estadual de Campinas (Unicamp)\\
   CEP 13083-852 -- Campinas, SP, Brasil
-%   \email{\{autores,NomeOrientador\}@dca.fee.unicamp.br}}
+  \email{\{ra186062,ra187646\}@.fee.unicamp.br}}
 
 \hyphenation{}
 \pagestyle{fancy}
@@ -36,8 +54,8 @@
 \selectlanguage{english}
 
    \begin{abstract}
-       This project study the possibility of using k-means and convolutional neural networks for solving text-based reverse Turing test mechanism, called CAPTCHA. Such mechanism is often used in network security for preventing attacks such as password guessing using bruteforce or dictionary or denial of service attacks.
-       Our approuch was to create a pipeline of pre-processing, segmentation and optical character recognition. For the first part we tested 3 methods for denoising, then used k-means clusterization algorithm for segmentation and finally trained a convolutional neural network to classify each individual character. The output was the concatenation of the output of the network for each input character of the CAPTCHA.
+       This project studies the possibility of using k-means and convolutional neural networks for solving text-based reverse Turing test mechanism, called CAPTCHA. Such mechanism is often used in network security for preventing attacks such as password guessing using bruteforce or dictionary or denial of service attacks.
+       Our approuch was based on creating a pipeline of pre-processing, segmentation and optical character recognition. For the first part of the project we used otsu threshold, erosion and dilatation methods for denoising, then used k-means clusterization algorithm for segmentation and finally trained a convolutional neural network to classify each individual character. The output was the concatenation of the output of the network for each input character of the CAPTCHA.
    \end{abstract}
 
   \keywords{CAPTCHA,  k-means, otsu threashold, convolutional  neural  networks, network security, optical character recognition.}
@@ -81,7 +99,14 @@ Nossa abordagem consistiu em aplicar um filtro que melhor convertesse a imagem e
         \label{fig:preproc}\par}
   \end{figure}
 
-Foram testados 3 filtros diferentes para a primeira etapa (\em adaptative threshold\em , filtro Otsu e filtro Otsu com ruído aleatório adicionado) e diferentes valores de iterações para os filtros de \em erosion \em e \em dilatation\em . Os filtros escolhidos, a saber filtro Otsu com 1 iteração de cada uma das distorções apresentadas, foram os que melhor removeram o ruído, selecionados por inspeção visual em uma amostra aleatória das imagens.
+Foram testados 3 filtros diferentes (Figura ~\ref{fig:filters}) para a primeira etapa (\em adaptative threshold\em , filtro Otsu e filtro Otsu com ruído aleatório adicionado) e diferentes valores de iterações para os filtros de \em erosion \em e \em dilatation\em . Os filtros escolhidos, a saber filtro Otsu com 1 iteração de cada uma das distorções apresentadas, foram os que melhor removeram o ruído, selecionados por inspeção visual em uma amostra aleatória das imagens.
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/filters.png}
+        \caption{Resultado do preprocessamento para cada filtro com erosion e dilatation.}
+        \label{fig:filters}\par}
+  \end{figure}
 
 
 \subsection{Segmentação da Imagem em Caracteres}
@@ -93,14 +118,14 @@ A abordagem escolhida para a etapa de clusterização foi o algoritmo k-means. O
 
 A solução encontrada foi projetar os dados no plano horizontal e em seguida aplicar o k-means apenas em 1 dimensão. Com isso, a informação utilizada de fato foi a posição horizontal dos centroides. Para cortar as imagens os centros foram posicionados no meio do eixo vertical (Figura ~\ref{fig:kmeans1d}).
 
-  \begin{figure}[H]
+  \begin{figure}
         {\centering
         \includegraphics[width=70mm]{images/2dkmeans.png}
         \caption{Clusters encontrados pelo kmeans nas 2 dimensões das imagens.}
         \label{fig:kmeans2d}\par}
   \end{figure}
 
-  \begin{figure}[H]
+  \begin{figure}
         {\centering
         \includegraphics[width=70mm]{images/1dkmeans.png}
         \caption{Clusters encontrados pelo kmeans no eixo horizontal. Retangulo ao redor de cada caractere encontrado pelo kmeans.}
@@ -120,17 +145,17 @@ A etapa de reconhecimento de caracteres consistiu em uma rede neural convolucion
 \item
     Duas camadas intermediárias \em fully connected \em com respectivamente 400 e 340 neurônios ReLU e dropout de 30\%
 \item
-    A camada de saída com 19 neurônios e ativação softmax
+    A camada de saída com 19 neurônios e função de ativação softmax
 \end{enumerate}
-
-O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{ex}).
 
   \begin{figure}[H]
         {\centering
         \includegraphics[width=70mm]{images/nn.png}
-        \caption{Arquitetura da rede.}
+        \caption{Arquitetura da rede neural.}
         \label{fig:nn}\par}
   \end{figure}
+
+O modelo foi escolhido usando validação cruzada (k-fold) e foi o que obteve a maior acurácia média entre os valores testados tanto para número de neurônios da última camada intermediária quanto para o valor de dropout (Tabela ~\ref{ex}).
 
 \begin{table}[H]
     {\centering
@@ -147,31 +172,67 @@ H   & Dropout & Avg Accuracy \\ \midrule
 340 & 0.3     & 0.9541       \\
 340 & 0.5     & 0.9382       \\ \bottomrule
 \end{tabular}
-\caption{Comparação entre modelos testados. H é o número de neurônios na última camada intermediária da rede.}
+\caption{Comparação entre modelos testados. H é o número de neurônios na última camada intermediária da rede neural.}
 \label{tab:ex}
     \par}
 \end{table}
 
 \section{Resultados}
 
+Como mostrado na Tabela ~\ref{tab:ex}, a acurácia do modelo de reconhecimento de caracteres foi de $0.9541$ - a curva de aprendizado do modelo com o valor da função de custo pelo número de épocas está mostrado na Figura ~\ref{fig:learning} e algumas predições na Figura ~\ref{fig:pred}.
+
   \begin{figure}[H]
         {\centering
         \includegraphics[width=70mm]{images/learning.png}
-        \caption{Curva de aprendizado.}
+        \caption{Curva de aprendizado da rede neural.}
         \label{fig:learning}\par}
   \end{figure}
 
   \begin{figure}[H]
         {\centering
         \includegraphics[width=70mm]{images/pred.png}
-        \caption{Classes encontradas pela rede convolucional para alguns dados de entrada.}
-        \label{fig:learning}\par}
+        \caption{Classes encontradas pela rede neural para alguns caracteres individuais de entrada.}
+        \label{fig:pred}\par}
+\end{figure}
+
+A acurácia do modelo completo (classificação do CAPTCHA todo) foi de $0.3246$. Algumas das predições podem ser vistas na Tabela ~\ref{tab:pred} 
+
+
+\begin{table}[H]
+    {\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+Output   & Target \\ \midrule
+g7w6y &g7wxw \\
+6cn48 &62nb4 \\
+6byng &6bxwg \\
+gpbwn &dpbyd \\
+wm47f &wm47f \\
+ybncw &wbncw \\
+532fm &5325m \\ \bottomrule
+\end{tabular}
+    \caption{Comparação entre resultados previstos e rótulos para o modelo final.}
+\label{tab:pred}
+    \par}
+\end{table}
+
+
+A matriz de confusão (Figura ~\ref{fig:confusion}) aponta que a maior parte das predições incorretas tem a ver com os caracteres 'm' e 'n'. Analisando-se os resultados foi possível perceber que $37\%$ das predições incorretas ($25\%$ das predições totais) foram causadas por confusões entre esses dois caracteres.
+
+  \begin{figure}[H]
+        {\centering
+        \includegraphics[width=70mm]{images/confusion.png}
+        \caption{Matriz de confusão para a saída da rede neural.}
+        \label{fig:confusion}\par}
   \end{figure}
+
+
 
 
 \section{Conclus\~{o}es}
 
-Foi possível desenvolver um sistema que identifica imagens de CAPTCHA com uma acurácia total de 0,2761 para os dados contidos no dataset \cite{data}. Para trabalhos posteriores, podem ser testados outros modelos de clusterização para que este englobe CAPTCHA’s com diferentes números de caracteres. Na parte de classificação podem ser utilizadas redes com maior número de camadas bem como outros bancos de dados com mais imagens para melhorar seu desempenho. Outra melhoria que pode ser feita é o uso de outras métricas que levem em conta um banco de dados com classes desbalanceadas.
+Foi possível desenvolver um sistema que identifica imagens de CAPTCHA com uma acurácia total de $0.3246$ para os dados contidos no \em dataset \em \cite{data}. O valor é baixo comparado com os valores atingidos por outros modelos de classificação de textos, mas mostra uma vulnerabilidade bastante relevante presente no tipo de CAPTCHA analisado. Para trabalhos posteriores, podem ser testados outros modelos de clusterização para que este englobe CAPTCHA’s com diferentes números de caracteres. Na parte de reconhecimento de caracteres, podem ser testadas redes neurais com diferentes arquiteturas, bem como outros modelos de classificação. É possível também que os métodos aqui desenvolvidos sejam usados em conjunto com bancos de dados com mais imagens para melhorar seu desempenho.
+% Outra melhoria que pode ser feita é o uso de outras métricas que levem em conta um banco de dados com classes desbalanceadas.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \nocite{15min} 

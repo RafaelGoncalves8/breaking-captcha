@@ -164,7 +164,7 @@ for i in range(9):
 plt.show()
 
 
-# In[13]:
+# In[14]:
 
 
 plt.subplot(4, 2, 1), plt.imshow(images2[0], 'gray')
@@ -176,10 +176,29 @@ plt.xticks([]), plt.yticks([])
 plt.subplot(4, 2, 3), plt.imshow(images2[2], 'gray')
 plt.title('Erosion')
 plt.xticks([]), plt.yticks([])
-plt.subplot(4, 2, 4), plt.imshow(images3[3], 'gray')
+plt.subplot(4, 2, 4), plt.imshow(images3[2], 'gray')
 plt.title('Dilatation')
 plt.xticks([]), plt.yticks([])
 plt.savefig(os.path.join(image_dir, 'preproc.png'), bbox_inches='tight')
+plt.show()
+
+
+# In[15]:
+
+
+plt.subplot(4, 2, 1), plt.imshow(images3[0], 'gray')
+plt.title('Original')
+plt.xticks([]), plt.yticks([])
+plt.subplot(4, 2, 2), plt.imshow(images3[1], 'gray')
+plt.title('Adaptative threshold')
+plt.xticks([]), plt.yticks([])
+plt.subplot(4, 2, 3), plt.imshow(images3[2], 'gray')
+plt.title('Otsu threshold')
+plt.xticks([]), plt.yticks([])
+plt.subplot(4, 2, 4), plt.imshow(images3[3], 'gray')
+plt.title('Otsu + Gaussian noise')
+plt.xticks([]), plt.yticks([])
+plt.savefig(os.path.join(image_dir, 'filters.png'), bbox_inches='tight')
 plt.show()
 
 
@@ -188,9 +207,3 @@ plt.show()
 # https://www.kaggle.com/fournierp/opencv-word-segmenting-on-captcha-images
 # 
 # https://stackoverflow.com/questions/10964226/how-to-convert-an-image-into-character-segments
-
-# In[ ]:
-
-
-
-

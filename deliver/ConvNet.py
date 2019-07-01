@@ -302,10 +302,16 @@ for H in [60, 120, 340]:
         plt.show()   
 
 
-# In[ ]:
+# In[56]:
 
 
-
+def performance_matrix(true,pred):
+    precision = metrics.precision_score(true,pred,average='macro')
+    recall = metrics.recall_score(true,pred,average='macro')
+    accuracy = metrics.accuracy_score(true,pred)
+    f1_score = metrics.f1_score(true,pred,average='macro')
+    print('Confusion Matrix:\n',metrics.confusion_matrix(true, pred))
+    print('Precision: {} Recall: {}, Accuracy: {}: ,f1_score: {}'.format(precision*100,recall*100,accuracy*100,f1_score*100))
 
 
 # In[ ]:

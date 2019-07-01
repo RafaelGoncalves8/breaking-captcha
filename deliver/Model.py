@@ -432,6 +432,33 @@ correct
 correct/len(pred_test)
 
 
+# In[48]:
+
+
+incorrect = len(pred_test) - correct
+mnproblem = 0
+for e, f in zip(pred_test, labels_test):
+    if e != f:
+        if (('m' in e and 'm' not in f) or
+            ('m' in f and 'm' not in e) or
+            ('n' in e and 'n' not in f) or
+            ('n' in f and 'n' not in e)):
+                mnproblem += 1
+print(mnproblem/incorrect)
+
+
+# In[49]:
+
+
+mnproblem/len(pred_test)
+
+
+# In[ ]:
+
+
+
+
+
 # In[32]:
 
 
@@ -453,6 +480,108 @@ classes = list(le.classes_)
 
 print(classes)
 cm = confusion(pred_test, labels_test, len(classes))
+
+
+# In[ ]:
+
+
+LETTER_IMAGES_FOLDER = letters_test_dir
+
+# initialize the data and labels
+data_l_test = []
+labels_l_test = []
+
+# loop over the input images
+for image_file in sorted(paths.list_images(LETTER_IMAGES_FOLDER)):
+    # Load the image and convert it to grayscale
+    image = cv2.imread(image_file)
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+    # Resize the letter so it fits in a 28x28 pixel box
+    image = resize_to_fit(image, 32, 32)
+
+    # Add a third channel dimension to the image to make Keras happy
+    image = np.expand_dims(image, axis=2)
+
+    # Grab the name of the letter based on the folder it was in
+    label = image_file.split(os.path.sep)[-1].split('.')[-2].split('-')[1]
+
+    # Add the letter image and it's label to our training data
+    data_l_test.append(image)
+    labels_l_test.append(label)
+
+
+# In[42]:
+
+
+with torch.no_grad():
+    output = net(test_loader.dataset.tensors[0])
+    pred = output.data.max(1, keepdim=True)[1]
+    target_l = test_loader.dataset.tensors[1]
+
+
+# In[43]:
+
+
+def performance_matrix(true,pred):
+    precision = metrics.precision_score(true,pred,average='macro')
+    recall = metrics.recall_score(true,pred,average='macro')
+    accuracy = metrics.accuracy_score(true,pred)
+    f1_score = metrics.f1_score(true,pred,average='macro')
+    print('Confusion Matrix:\n',metrics.confusion_matrix(true, pred))
+    print('Precision: {} Recall: {}, Accuracy: {}: ,f1_score: {}'.format(precision*100,recall*100,accuracy*100,f1_score*100))
+
+
+# In[46]:
+
+
+from sklearn import metrics
+
+def plot_confusion_matrix(y_true, y_pred, classes,
+                          normalize=False,
+                          title=None,
+                          cmap=plt.cm.Blues):
+    """
+    This function prints and plots the confusion matrix.
+    Normalization can be applied by setting `normalize=True`.
+    """
+    if not title:
+        if normalize:
+            title = 'Normalized confusion matrix'
+        else:
+            title = 'Confusion matrix, without normalization'# Compute confusion matrix
+    cm = metrics.confusion_matrix(y_true, y_pred)
+    # Only use the labels that appear in the data
+    #classes = classes[unique_labels(y_true, y_pred)]
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+        print(cm)
+        fig, ax = plt.subplots()
+    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)
+    ax.figure.colorbar(im, ax=ax)
+    # We want to show all ticks...
+    ax.set(xticks=np.arange(cm.shape[1]),
+           yticks=np.arange(cm.shape[0]),
+           # ... and label them with the respective list entries
+           xticklabels=classes, yticklabels=classes,
+           title=title,
+           ylabel='True label',
+           xlabel='Predicted label')# Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")# Loop over data dimensions and create text annotations.
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i in range(cm.shape[0]):
+        for j in range(cm.shape[1]):
+            ax.text(j, i, format(cm[i, j], fmt),
+                    ha="center", va="center",
+                    color="white" if cm[i, j] > thresh else "black")
+    fig.tight_layout()
+    return ax
+plot_confusion_matrix(target_l, pred, classes=le.classes_,title='Confusion matrix')
 
 
 # In[ ]:

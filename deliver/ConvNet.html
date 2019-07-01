@@ -13955,10 +13955,16 @@ Avg accuracy: 0.9381877341049036
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[56]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">performance_matrix</span><span class="p">(</span><span class="n">true</span><span class="p">,</span><span class="n">pred</span><span class="p">):</span>
+    <span class="n">precision</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">precision_score</span><span class="p">(</span><span class="n">true</span><span class="p">,</span><span class="n">pred</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span>
+    <span class="n">recall</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">recall_score</span><span class="p">(</span><span class="n">true</span><span class="p">,</span><span class="n">pred</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span>
+    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">true</span><span class="p">,</span><span class="n">pred</span><span class="p">)</span>
+    <span class="n">f1_score</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">f1_score</span><span class="p">(</span><span class="n">true</span><span class="p">,</span><span class="n">pred</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="s1">&#39;macro&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Confusion Matrix:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">metrics</span><span class="o">.</span><span class="n">confusion_matrix</span><span class="p">(</span><span class="n">true</span><span class="p">,</span> <span class="n">pred</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Precision: </span><span class="si">{}</span><span class="s1"> Recall: </span><span class="si">{}</span><span class="s1">, Accuracy: </span><span class="si">{}</span><span class="s1">: ,f1_score: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">precision</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="n">recall</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="n">accuracy</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span><span class="n">f1_score</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
 </pre></div>
 
     </div>
